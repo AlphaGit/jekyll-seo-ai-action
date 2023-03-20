@@ -4,6 +4,7 @@
   "main": "index.js",
   "author": "Alpha <alphagma@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
@@ -15,6 +16,6 @@
     "@vercel/ncc": "^0.36.1"
   },
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt"
+    "build": "ncc build index.js --license licenses.txt -m"
   }
 }
