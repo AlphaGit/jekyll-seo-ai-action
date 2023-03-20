@@ -1,20 +1,20 @@
-const core = require('@actions/core');
+import { setFailed } from '@actions/core';
 
-const files = require('./src/changed-files.js');
-const report = require('./src/report.js');
-const gitHub = require('./src/github.js');
-const generator = require('./src/generator.js');
+import { getChangedFiles } from './src/changed-files.js';
+import { generateReport } from './src/report.js';
+import { createCommit, createComment } from './src/github.js';
+import { generateDescriptions } from './src/generator.js';
 
 const run = async () => {
     try {
-        const changedFiles = await files.getChangedFiles();
-        const results = await generator.generateDescriptions(changedFiles);
-        const reportContent = await report.generateReport(results);
+        const changedFiles = await getChangedFiles();
+        const results = await generateDescriptions(changedFiles);
+        const reportContent = await generateReport(results);
 
-        await gitHub.createCommit(changedFiles);
-        await gitHub.createComment(reportContent);
+        await createCommit(changedFiles);
+        await createComment(reportContent);
     } catch (error) {
-        core.setFailed(error.message);
+        setFailed(error.message);
     }
 };
 

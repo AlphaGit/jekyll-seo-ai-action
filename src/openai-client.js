@@ -1,7 +1,7 @@
-const { Configuration, OpenAIApi } = require('openai-api');
-const Settings = require('./settings');
+import { Configuration, OpenAIApi } from 'openai-api';
+import Settings from './settings';
 
-const getModelResponse = async (prompt) => {
+export const getModelResponse = async (prompt) => {
     const configuration = new Configuration({
         apiKey: Settings.OPENAI_KEY,
     });
@@ -16,8 +16,4 @@ const getModelResponse = async (prompt) => {
     });
 
     return response.data.choices[0].text;
-};
-
-module.exports = {
-    getModelResponse,
 };

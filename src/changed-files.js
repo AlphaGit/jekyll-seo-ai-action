@@ -1,6 +1,6 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const path = require('path');
+import core from '@actions/core';
+import github from '@actions/github';
+import path from 'path';
 
 export const getChangedFiles = async () => {
     const token = core.getInput('repo-token', { required: true });
@@ -24,8 +24,4 @@ export const getChangedFiles = async () => {
         .map(f => path.resolve(f));
 
     return changedFilePaths; 
-};
-
-module.exports = {
-    getChangedFiles
 };

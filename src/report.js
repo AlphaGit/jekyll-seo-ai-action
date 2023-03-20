@@ -1,4 +1,4 @@
-const generateReport = async (results) => {
+export const generateReport = async (results) => {
     const lines = [];
 
     lines.push(`# Updated files`);
@@ -10,8 +10,4 @@ const generateReport = async (results) => {
     });
 
     return lines.join(`\n\r`);
-};
-
-module.exports = {
-    generateReport
 };

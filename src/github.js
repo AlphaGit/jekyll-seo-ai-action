@@ -1,6 +1,6 @@
-const fs = require('fs').promises;
+import { promises as fs } from 'fs';
 
-const createComment = async (body) => {
+export const createComment = async (body) => {
     const owner = github.context.payload.repository.owner.login;
     const repo = github.context.payload.repository.name;
     const issue_number = github.context.payload.pull_request.number;
@@ -21,7 +21,7 @@ const createBlobs = async ({ owner, repo, filePaths }) => {
     }));
 };
 
-const createCommit = async (changedFiles) => {
+export const createCommit = async (changedFiles) => {
     const owner = github.context.payload.repository.owner.login;
     const repo = github.context.payload.repository.name;
     const headRef = github.context.payload.pull_request.head.ref;
@@ -41,9 +41,4 @@ const createCommit = async (changedFiles) => {
     });
 
     await client.git.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
-};
-
-module.exports = {
-    createComment,
-    createCommit
 };

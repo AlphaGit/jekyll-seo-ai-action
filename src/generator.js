@@ -1,8 +1,8 @@
-const fs = require('fs').promises;
-const yaml = require('js-yaml');
+import { promises as fs } from 'fs';
+import { load, dump } from 'js-yaml';
 
-const settings = require('./settings');
-const openaiClient = require('./openai-client');
+import settings from './settings';
+import openaiClient from './openai-client';
 
 const FRONT_MATTER_REGEX = /---(.*)---/s;
 const PAGE_ENCODING = 'utf-8';
@@ -17,7 +17,7 @@ class DescriptionResult {
 const generateDescription = async (page) => {
     const pageContents = await fs.read(page, PAGE_ENCODING);
     const rawFrontMatter = pageContents.match(FRONT_MATTER_REGEX)[1];
-    const fronMatter = yaml.load(rawFrontMatter);
+    const fronMatter = load(rawFrontMatter);
 
     const body = pageContents.replace(FRONT_MATTER_REGEX, '');
 
@@ -25,19 +25,15 @@ const generateDescription = async (page) => {
     const description = await openaiClient.getModelResponse(prompt);
 
     fronMatter.description = description;
-    const newPageContents = `---\n${yaml.dump(fronMatter)}---\n${body}`;
+    const newPageContents = `---\n${dump(fronMatter)}---\n${body}`;
     await fs.write(page, newPageContents, PAGE_ENCODING);
 
     return new DescriptionResult(page, description);
 };
 
-const generateDescriptions = async (pages) => {
+export const generateDescriptions = async (pages) => {
     const resultTasks = pages.map(async (page) =>
         await generateDescription(page)
     );
     return await Promise.all(resultTasks);
-};
-
-module.exports = {
-    generateDescriptions,
 };
