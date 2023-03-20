@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import { load, dump } from 'js-yaml';
 
-import settings from './settings';
-import openaiClient from './openai-client';
+import { OPENAI_PROMPT } from './settings';
+import { getModelResponse } from './openai-client';
 
 const FRONT_MATTER_REGEX = /---(.*)---/s;
 const PAGE_ENCODING = 'utf-8';
@@ -21,8 +21,8 @@ const generateDescription = async (page) => {
 
     const body = pageContents.replace(FRONT_MATTER_REGEX, '');
 
-    const prompt = settings.OPENAI_PROMPT.replace('{body}', body);
-    const description = await openaiClient.getModelResponse(prompt);
+    const prompt = OPENAI_PROMPT.replace('{body}', body);
+    const description = await getModelResponse(prompt);
 
     fronMatter.description = description;
     const newPageContents = `---\n${dump(fronMatter)}---\n${body}`;

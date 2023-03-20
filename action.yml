@@ -3,7 +3,7 @@ description: 'Generate SEO tags for Jekyll'
 author: Alpha <alphagma@gmail.com>
 runs:
   using: 'node16'
-  main: 'dist/index.js'
+  main: 'index.js'
 
 inputs:
   openapi_key:

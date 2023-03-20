@@ -16,6 +16,6 @@
     "@vercel/ncc": "^0.36.1"
   },
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt -m"
+    "build": "ncc build index.js --license licenses.txt --target es2020"
   }
 }
