@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai-api';
+import { Configuration, OpenAIApi } from 'openai';
 import { OPENAI_KEY } from './settings';
 
 export const getModelResponse = async (prompt) => {

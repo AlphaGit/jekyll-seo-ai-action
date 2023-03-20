@@ -13,9 +13,17 @@
     "openai": "^3.2.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.36.1"
+    "@vercel/ncc": "^0.36.1",
+    "esbuild": "^0.17.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlphaGit/jekyll-seo-ai-action.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlphaGit/jekyll-seo-ai-action/issues"
   },
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt --target es2020"
+    "build": "esbuild index.js --bundle --platform=node --outfile=dist/index.js --target=es2020"
   }
 }
