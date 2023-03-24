@@ -23,9 +23,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Generate content for Jekyll Pages
         uses: AlphaGit/jekyll-seo-ai-action
-        with:
+        env:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 2. Setup the following configuration variables in your repo:
