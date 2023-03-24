@@ -1,9 +1,8 @@
-import core from '@actions/core';
 import github from '@actions/github';
 import path from 'path';
 
 export const getChangedFiles = async () => {
-    const pullRequest = core.context.payload.pull_request;
+    const pullRequest = github.context.payload.pull_request;
     if (!pullRequest) {
         return [];
     }
