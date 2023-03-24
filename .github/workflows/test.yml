@@ -4,8 +4,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Test Content Generator for Jekyll Pages
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run Content Generator
         uses: ./
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}

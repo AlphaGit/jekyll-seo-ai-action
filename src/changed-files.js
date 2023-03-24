@@ -3,14 +3,12 @@ import github from '@actions/github';
 import path from 'path';
 
 export const getChangedFiles = async () => {
-    const token = core.getInput('repo-token', { required: true });
-    const client = new github.GitHub(token);
-
     const pullRequest = core.context.payload.pull_request;
     if (!pullRequest) {
         return [];
     }
 
+    const client = new github.GitHub(github.token);
     const listFilesResponse = await client.pulls.listFiles({
         owner: context.repo.owner,
         repo: context.repo.repo,

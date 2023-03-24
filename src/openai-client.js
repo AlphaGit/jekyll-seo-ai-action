@@ -1,9 +1,9 @@
 import { Configuration, OpenAIApi } from 'openai';
-import { OPENAI_KEY } from './settings';
+import { OPENAI_API_KEY } from './settings';
 
 export const getModelResponse = async (prompt) => {
     const configuration = new Configuration({
-        apiKey: OPENAI_KEY,
+        apiKey: OPENAI_API_KEY,
     });
 
     const openai = new OpenAIApi(configuration);
