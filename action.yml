@@ -6,8 +6,8 @@ runs:
   main: 'dist/index.js'
 
 inputs:
-  openapi_key:
-    description: 'OpenAPI key'
+  openai_api_key:
+    description: 'OpenAI API key'
     required: true
 
 branding:
