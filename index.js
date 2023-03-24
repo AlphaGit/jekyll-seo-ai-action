@@ -14,7 +14,9 @@ const run = async () => {
         await createCommit(changedFiles);
         await createComment(reportContent);
     } catch (error) {
+        console.error(error);
         setFailed(error.message);
+        throw error;
     }
 };
 

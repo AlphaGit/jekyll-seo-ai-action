@@ -24447,7 +24447,9 @@ var run = async () => {
     await createCommit(changedFiles);
     await createComment(reportContent);
   } catch (error) {
+    console.error(error);
     (0, import_core2.setFailed)(error.message);
+    throw error;
   }
 };
 run();
