@@ -21652,14 +21652,13 @@ var require_dist = __commonJS({
 });
 
 // index.js
-var import_core2 = __toESM(require_core(), 1);
+var import_core = __toESM(require_core(), 1);
 
 // src/changed-files.js
-var import_core = __toESM(require_core(), 1);
 var import_github = __toESM(require_github(), 1);
 var import_path = __toESM(require("path"), 1);
 var getChangedFiles = async () => {
-  const pullRequest = import_core.default.context.payload.pull_request;
+  const pullRequest = import_github.default.context.payload.pull_request;
   if (!pullRequest) {
     return [];
   }
@@ -22331,7 +22330,7 @@ var json = failsafe.extend({
     float
   ]
 });
-var core2 = json;
+var core = json;
 var YAML_DATE_REGEXP = new RegExp(
   "^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"
 );
@@ -22568,7 +22567,7 @@ var set = new type("tag:yaml.org,2002:set", {
   resolve: resolveYamlSet,
   construct: constructYamlSet
 });
-var _default = core2.extend({
+var _default = core.extend({
   implicit: [
     timestamp,
     merge
@@ -24448,7 +24447,7 @@ var run = async () => {
     await createComment(reportContent);
   } catch (error) {
     console.error(error);
-    (0, import_core2.setFailed)(error.message);
+    (0, import_core.setFailed)(error.message);
     throw error;
   }
 };
