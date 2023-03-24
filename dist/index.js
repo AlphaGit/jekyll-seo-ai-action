@@ -7753,11 +7753,11 @@ var require_github = __commonJS({
     var Context = __importStar(require_context());
     var utils_1 = require_utils4();
     exports.context = new Context.Context();
-    function getOctokit(token, options, ...additionalPlugins) {
+    function getOctokit2(token, options, ...additionalPlugins) {
       const GitHubWithPlugins = utils_1.GitHub.plugin(...additionalPlugins);
       return new GitHubWithPlugins(utils_1.getOctokitOptions(token, options));
     }
-    exports.getOctokit = getOctokit;
+    exports.getOctokit = getOctokit2;
   }
 });
 
@@ -21654,24 +21654,6 @@ var require_dist = __commonJS({
 // index.js
 var import_core = __toESM(require_core(), 1);
 
-// src/changed-files.js
-var import_github = __toESM(require_github(), 1);
-var import_path = __toESM(require("path"), 1);
-var getChangedFiles = async () => {
-  const pullRequest = import_github.default.context.payload.pull_request;
-  if (!pullRequest) {
-    return [];
-  }
-  const client2 = new import_github.default.GitHub(import_github.default.token);
-  const listFilesResponse = await client2.pulls.listFiles({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    pull_number: pullRequest.number
-  });
-  const changedFilePaths = listFilesResponse.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
-  return changedFilePaths;
-};
-
 // src/report.js
 var generateReport = async (results) => {
   const lines = [];
@@ -21688,10 +21670,12 @@ var generateReport = async (results) => {
 
 // src/github.js
 var import_fs = require("fs");
+var import_path = __toESM(require("path"), 1);
+var import_github = __toESM(require_github(), 1);
 var createComment = async (body) => {
-  const owner = github.context.payload.repository.owner.login;
-  const repo = github.context.payload.repository.name;
-  const issue_number = github.context.payload.pull_request.number;
+  const owner = import_github.context.payload.repository.owner.login;
+  const repo = import_github.context.payload.repository.name;
+  const issue_number = import_github.context.payload.pull_request.number;
   return client.issues.createComment({ owner, repo, issue_number, body });
 };
 var createBlobs = async ({ owner, repo, filePaths }) => {
@@ -21707,10 +21691,10 @@ var createBlobs = async ({ owner, repo, filePaths }) => {
   }));
 };
 var createCommit = async (changedFiles) => {
-  const owner = github.context.payload.repository.owner.login;
-  const repo = github.context.payload.repository.name;
-  const headRef = github.context.payload.pull_request.head.ref;
-  const headSHA = github.context.payload.pull_request.head.sha;
+  const owner = import_github.context.payload.repository.owner.login;
+  const repo = import_github.context.payload.repository.name;
+  const headRef = import_github.context.payload.pull_request.head.ref;
+  const headSHA = import_github.context.payload.pull_request.head.sha;
   const lastCommit = await client.git.getCommit({ owner, repo, commit_sha: headSHA });
   const baseTree = lastCommit.data.tree.sha;
   const blobs = await createBlobs({ owner, repo, filePaths: changedFiles });
@@ -21723,6 +21707,20 @@ var createCommit = async (changedFiles) => {
     parents: [headSHA]
   });
   await client.git.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
+};
+var getChangedFiles = async () => {
+  const pullRequest = import_github.context.payload.pull_request;
+  if (!pullRequest) {
+    return [];
+  }
+  const client2 = (0, import_github.getOctokit)(github.token);
+  const listFilesResponse = await client2.pulls.listFiles({
+    owner: import_github.context.repo.owner,
+    repo: import_github.context.repo.repo,
+    pull_number: pullRequest.number
+  });
+  const changedFilePaths = listFilesResponse.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
+  return changedFilePaths;
 };
 
 // src/generator.js

@@ -1,8 +1,7 @@
 import { setFailed } from '@actions/core';
 
-import { getChangedFiles } from './src/changed-files.js';
 import { generateReport } from './src/report.js';
-import { createCommit, createComment } from './src/github.js';
+import { getChangedFiles, createCommit, createComment } from './src/github.js';
 import { generateDescriptions } from './src/generator.js';
 
 const run = async () => {
