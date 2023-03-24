@@ -21659,12 +21659,11 @@ var import_core = __toESM(require_core(), 1);
 var import_github = __toESM(require_github(), 1);
 var import_path = __toESM(require("path"), 1);
 var getChangedFiles = async () => {
-  const token = import_core.default.getInput("repo-token", { required: true });
-  const client2 = new import_github.default.GitHub(token);
   const pullRequest = import_core.default.context.payload.pull_request;
   if (!pullRequest) {
     return [];
   }
+  const client2 = new import_github.default.GitHub(import_github.default.token);
   const listFilesResponse = await client2.pulls.listFiles({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -24391,13 +24390,13 @@ var safeDump = renamed("safeDump", "dump");
 var dotenv = __toESM(require_main(), 1);
 dotenv.config();
 var OPENAI_PROMPT = process.env.OPENAI_PROMPT;
-var OPENAI_KEY = process.env.OPENAI_KEY;
+var OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // src/openai-client.js
 var import_openai = __toESM(require_dist(), 1);
 var getModelResponse = async (prompt) => {
   const configuration = new import_openai.Configuration({
-    apiKey: OPENAI_KEY
+    apiKey: OPENAI_API_KEY
   });
   const openai = new import_openai.OpenAIApi(configuration);
   const response = await openai.complete({
