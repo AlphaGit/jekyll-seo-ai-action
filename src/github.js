@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { context, getOctokit } from '@actions/github';
+import { GITHUB_TOKEN } from './settings';
 
 export const createComment = async (body) => {
     const owner = context.payload.repository.owner.login;
@@ -51,7 +52,7 @@ export const getChangedFiles = async () => {
         return [];
     }
 
-    const client = getOctokit(github.token);
+    const client = getOctokit(GITHUB_TOKEN);
     const listFilesResponse = await client.pulls.listFiles({
         owner: context.repo.owner,
         repo: context.repo.repo,

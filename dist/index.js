@@ -21672,6 +21672,15 @@ var generateReport = async (results) => {
 var import_fs = require("fs");
 var import_path = __toESM(require("path"), 1);
 var import_github = __toESM(require_github(), 1);
+
+// src/settings.js
+var dotenv = __toESM(require_main(), 1);
+dotenv.config();
+var OPENAI_PROMPT = process.env.OPENAI_PROMPT;
+var OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+// src/github.js
 var createComment = async (body) => {
   const owner = import_github.context.payload.repository.owner.login;
   const repo = import_github.context.payload.repository.name;
@@ -21713,7 +21722,7 @@ var getChangedFiles = async () => {
   if (!pullRequest) {
     return [];
   }
-  const client2 = (0, import_github.getOctokit)(github.token);
+  const client2 = (0, import_github.getOctokit)(GITHUB_TOKEN);
   const listFilesResponse = await client2.pulls.listFiles({
     owner: import_github.context.repo.owner,
     repo: import_github.context.repo.repo,
@@ -24382,12 +24391,6 @@ var dump = dumper.dump;
 var safeLoad = renamed("safeLoad", "load");
 var safeLoadAll = renamed("safeLoadAll", "loadAll");
 var safeDump = renamed("safeDump", "dump");
-
-// src/settings.js
-var dotenv = __toESM(require_main(), 1);
-dotenv.config();
-var OPENAI_PROMPT = process.env.OPENAI_PROMPT;
-var OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // src/openai-client.js
 var import_openai = __toESM(require_dist(), 1);
