@@ -12,12 +12,11 @@ header:
   image: assets/papers.png
   image_description: Written knowledge, but searchable
 description: >-
-
-
-  Explore the benefits of the "second-brain" approach to note-taking and
-  knowledge management w/ Obsidian. Learn about the power of interlinking notes
-  & how to set up your own tech garden w/ Obsidian & GitHub Pages.
+  Explore the benefits of using a "second-brain" approach with Obsidian, a free
+  & powerful note-taking tool. Learn how to sync & publish with GitHub & Quartz.
+  Check out my "Tech Garden" for inspiration.
 ---
+
 
 
 I have stopped reviewing tools as part of my blog for a long time, but I did want to point out the benefits of the second-brain approach of some applications. I have personally found my sweet spot with [Obsidian](https://obsidian.md/), so I'd like to talk about that.

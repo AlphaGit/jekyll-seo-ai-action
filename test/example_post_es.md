@@ -17,9 +17,11 @@ tags:
   - respuestas
 subtitle: Mi guía novata a la organización
 description: >-
-  Descubre cómo usar Trello para organizar tu día: listas, tarjetas, feedback y
-  más. ¡Aprende cómo mejorar tu productividad!
+  Aprende cómo utilizar Trello para mejorar tu organización personal y laboral.
+  Desde cambiar el flujo por default, hasta crear listas para el día a día.
+  Comparte tus sugerencias para ser más productivo.
 ---
+
 
 
 Hace un tiempo ya, y realmente, el día que salió, yo ya tenía una cuenta de [Trello](http://trello.com). Era simple, era bonito, era rápido, pero no veía el gran poder que tenía. Es porque, como muchas cosas, hay que saber utilizarlas.
