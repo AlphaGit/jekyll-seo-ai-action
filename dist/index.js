@@ -21527,7 +21527,12 @@ var import_github = __toESM(require_github(), 1);
 
 // src/settings.js
 var import_core = __toESM(require_core(), 1);
-var OPENAI_PROMPT = "Generate a description to be used in the SEO meta tag for the page. Do not include any kind of code in the response, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in markdown format. The blog post is present below:\n{body}";
+var OPENAI_PROMPT = `Generate a single-paragraph description to be used in the SEO meta tag for a page. Do not include any kind of code or titles in the response, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in markdown format. 
+
+---BLOG POST BEGIN---
+{body}
+---BLOG POST END---
+`;
 var OPENAI_API_KEY = (0, import_core.getInput)("openai-api-key");
 var GITHUB_TOKEN = (0, import_core.getInput)("github-token");
 
