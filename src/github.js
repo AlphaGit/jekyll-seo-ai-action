@@ -3,18 +3,21 @@ import path from 'path';
 import { context, getOctokit } from '@actions/github';
 import { GITHUB_TOKEN } from './settings';
 
+const client = getOctokit(GITHUB_TOKEN);
+const { rest: { git: gitClient } } = client;
+
 export const createComment = async (body) => {
     const owner = context.payload.repository.owner.login;
     const repo = context.payload.repository.name;
     const issue_number = context.payload.pull_request.number;
 
-    return client.issues.createComment({ owner, repo, issue_number, body });
+    return client.rest.issues.createComment({ owner, repo, issue_number, body });
 };
 
 const createBlobs = async ({ owner, repo, filePaths }) => {
     return await Promise.all(filePaths.map(async (filePath) => {
         const content = await fs.readFile(filePath, { encoding: 'base64' });
-        const blob = client.git.createBlob({ owner, repo, content, encoding: 'base64' });
+        const blob = gitClient.createBlob({ owner, repo, content, encoding: 'base64' });
         return {
             path: filePath,
             type: 'blob',
@@ -30,12 +33,12 @@ export const createCommit = async (changedFiles) => {
     const headRef = context.payload.pull_request.head.ref;
     const headSHA = context.payload.pull_request.head.sha;
 
-    const lastCommit = await client.git.getCommit({ owner, repo, commit_sha: headSHA });
+    const lastCommit = await gitClient.getCommit({ owner, repo, commit_sha: headSHA });
 
     const baseTree = lastCommit.data.tree.sha;
     const blobs = await createBlobs({ owner, repo, filePaths: changedFiles });
-    const tree = await client.git.createTree({ owner, repo, base_tree: baseTree, tree: blobs });
-    const commit = await client.git.createCommit({
+    const tree = await gitClient.createTree({ owner, repo, base_tree: baseTree, tree: blobs });
+    const commit = await gitClient.createCommit({
         owner,
         repo,
         message: 'Generated descriptions',
@@ -43,7 +46,7 @@ export const createCommit = async (changedFiles) => {
         parents: [headSHA]
     });
 
-    await client.git.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
+    await gitClient.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
 };
 
 export const getChangedFiles = async () => {
@@ -52,7 +55,6 @@ export const getChangedFiles = async () => {
         return [];
     }
 
-    const client = getOctokit(GITHUB_TOKEN);
     const changedFiles = await client.rest.pulls.listFiles({
         owner: context.repo.owner,
         repo: context.repo.repo,

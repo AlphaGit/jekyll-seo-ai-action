@@ -21531,16 +21531,18 @@ var OPENAI_API_KEY = (0, import_core.getInput)("openai-api-key");
 var GITHUB_TOKEN = (0, import_core.getInput)("github-token");
 
 // src/github.js
+var client = (0, import_github.getOctokit)(GITHUB_TOKEN);
+var { rest: { git: gitClient } } = client;
 var createComment = async (body) => {
   const owner = import_github.context.payload.repository.owner.login;
   const repo = import_github.context.payload.repository.name;
   const issue_number = import_github.context.payload.pull_request.number;
-  return client.issues.createComment({ owner, repo, issue_number, body });
+  return client.rest.issues.createComment({ owner, repo, issue_number, body });
 };
 var createBlobs = async ({ owner, repo, filePaths }) => {
   return await Promise.all(filePaths.map(async (filePath) => {
     const content = await import_fs.promises.readFile(filePath, { encoding: "base64" });
-    const blob = client.git.createBlob({ owner, repo, content, encoding: "base64" });
+    const blob = gitClient.createBlob({ owner, repo, content, encoding: "base64" });
     return {
       path: filePath,
       type: "blob",
@@ -21554,26 +21556,25 @@ var createCommit = async (changedFiles) => {
   const repo = import_github.context.payload.repository.name;
   const headRef = import_github.context.payload.pull_request.head.ref;
   const headSHA = import_github.context.payload.pull_request.head.sha;
-  const lastCommit = await client.git.getCommit({ owner, repo, commit_sha: headSHA });
+  const lastCommit = await gitClient.getCommit({ owner, repo, commit_sha: headSHA });
   const baseTree = lastCommit.data.tree.sha;
   const blobs = await createBlobs({ owner, repo, filePaths: changedFiles });
-  const tree = await client.git.createTree({ owner, repo, base_tree: baseTree, tree: blobs });
-  const commit = await client.git.createCommit({
+  const tree = await gitClient.createTree({ owner, repo, base_tree: baseTree, tree: blobs });
+  const commit = await gitClient.createCommit({
     owner,
     repo,
     message: "Generated descriptions",
     tree: tree.data.sha,
     parents: [headSHA]
   });
-  await client.git.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
+  await gitClient.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
 };
 var getChangedFiles = async () => {
   const pullRequest = import_github.context.payload.pull_request;
   if (!pullRequest) {
     return [];
   }
-  const client2 = (0, import_github.getOctokit)(GITHUB_TOKEN);
-  const changedFiles = await client2.rest.pulls.listFiles({
+  const changedFiles = await client.rest.pulls.listFiles({
     owner: import_github.context.repo.owner,
     repo: import_github.context.repo.repo,
     pull_number: pullRequest.number
