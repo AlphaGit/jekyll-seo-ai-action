@@ -4,7 +4,7 @@ import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
 import { OPENAI_PROMPT } from './settings';
 import { getModelResponse } from './openai-client';
 
-const FRONT_MATTER_REGEX = /---(.*)---/s;
+const FRONT_MATTER_REGEX = /---(.+?)---/su;
 const PAGE_ENCODING = 'utf-8';
 
 class DescriptionResult {
@@ -45,9 +45,14 @@ const generateDescription = async (page) => {
 };
 
 export const generateDescriptions = async (pages) => {
-    const resultTasks = pages.map(async (page) =>
-        await generateDescription(page)
-    );
+    const resultTasks = pages.map(async (page) => {
+        try {
+            return await generateDescription(page)
+        } catch (error) {
+            console.error(`Error generating description for ${page}: ${error}`);
+            return null;
+        }
+    });
     const descriptionResults = await Promise.all(resultTasks);
     return descriptionResults.filter((result) => result !== null);
 };
