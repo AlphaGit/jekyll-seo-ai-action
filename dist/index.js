@@ -21573,13 +21573,13 @@ var getChangedFiles = async () => {
     return [];
   }
   const client2 = (0, import_github.getOctokit)(GITHUB_TOKEN);
-  const listFilesResponse = await client2.pulls.listFiles({
+  const changedFiles = await client2.rest.pulls.listFiles({
     owner: import_github.context.repo.owner,
     repo: import_github.context.repo.repo,
     pull_number: pullRequest.number
   });
-  const changedFilePaths = listFilesResponse.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
-  return changedFilePaths;
+  const markdownFiles = changedFiles.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
+  return markdownFiles;
 };
 
 // src/generator.js

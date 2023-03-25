@@ -53,17 +53,17 @@ export const getChangedFiles = async () => {
     }
 
     const client = getOctokit(GITHUB_TOKEN);
-    const listFilesResponse = await client.pulls.listFiles({
+    const changedFiles = await client.rest.pulls.listFiles({
         owner: context.repo.owner,
         repo: context.repo.repo,
         pull_number: pullRequest.number
     });
 
-    const changedFilePaths = listFilesResponse.data
+    const markdownFiles = changedFiles
         .map(file => file.filename)
         .filter(f => !f.match(/\node_modules\//))
         .filter(f => f.match(/\.(md|markdown)$/i))
         .map(f => path.resolve(f));
 
-    return changedFilePaths; 
+    return markdownFiles; 
 };
