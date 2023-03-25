@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Run Content Generator
+      - name: Run SEO Content AI Generator
         uses: ./
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
