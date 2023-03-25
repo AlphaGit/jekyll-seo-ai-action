@@ -1961,7 +1961,7 @@ var require_path_utils = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
-    var path2 = __importStar(require("path"));
+    var path = __importStar(require("path"));
     function toPosixPath(pth) {
       return pth.replace(/[\\]/g, "/");
     }
@@ -1971,7 +1971,7 @@ var require_path_utils = __commonJS({
     }
     exports.toWin32Path = toWin32Path;
     function toPlatformPath(pth) {
-      return pth.replace(/[/\\]/g, path2.sep);
+      return pth.replace(/[/\\]/g, path.sep);
     }
     exports.toPlatformPath = toPlatformPath;
   }
@@ -2042,7 +2042,7 @@ var require_core = __commonJS({
     var file_command_1 = require_file_command();
     var utils_1 = require_utils();
     var os = __importStar(require("os"));
-    var path2 = __importStar(require("path"));
+    var path = __importStar(require("path"));
     var oidc_utils_1 = require_oidc_utils();
     var ExitCode;
     (function(ExitCode2) {
@@ -2070,7 +2070,7 @@ var require_core = __commonJS({
       } else {
         command_1.issueCommand("add-path", {}, inputPath);
       }
-      process.env["PATH"] = `${inputPath}${path2.delimiter}${process.env["PATH"]}`;
+      process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports.addPath = addPath;
     function getInput2(name, options) {
@@ -2225,8 +2225,8 @@ var require_context = __commonJS({
           if (fs_1.existsSync(process.env.GITHUB_EVENT_PATH)) {
             this.payload = JSON.parse(fs_1.readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: "utf8" }));
           } else {
-            const path2 = process.env.GITHUB_EVENT_PATH;
-            process.stdout.write(`GITHUB_EVENT_PATH ${path2} does not exist${os_1.EOL}`);
+            const path = process.env.GITHUB_EVENT_PATH;
+            process.stdout.write(`GITHUB_EVENT_PATH ${path} does not exist${os_1.EOL}`);
           }
         }
         this.eventName = process.env.GITHUB_EVENT_NAME;
@@ -3544,14 +3544,14 @@ var require_url_state_machine = __commonJS({
       return url.replace(/\u0009|\u000A|\u000D/g, "");
     }
     function shortenPath(url) {
-      const path2 = url.path;
-      if (path2.length === 0) {
+      const path = url.path;
+      if (path.length === 0) {
         return;
       }
-      if (url.scheme === "file" && path2.length === 1 && isNormalizedWindowsDriveLetter(path2[0])) {
+      if (url.scheme === "file" && path.length === 1 && isNormalizedWindowsDriveLetter(path[0])) {
         return;
       }
-      path2.pop();
+      path.pop();
     }
     function includesCredentials(url) {
       return url.username !== "" || url.password !== "";
@@ -8121,14 +8121,14 @@ var require_cookies = __commonJS({
       // Standard browser envs support document.cookie
       function standardBrowserEnv() {
         return {
-          write: function write(name, value, expires, path2, domain, secure) {
+          write: function write(name, value, expires, path, domain, secure) {
             var cookie = [];
             cookie.push(name + "=" + encodeURIComponent(value));
             if (utils.isNumber(expires)) {
               cookie.push("expires=" + new Date(expires).toGMTString());
             }
-            if (utils.isString(path2)) {
-              cookie.push("path=" + path2);
+            if (utils.isString(path)) {
+              cookie.push("path=" + path);
             }
             if (utils.isString(domain)) {
               cookie.push("domain=" + domain);
@@ -20858,11 +20858,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path2) {
-      if (!path2 || typeof path2 !== "string") {
+    function lookup(path) {
+      if (!path || typeof path !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path2).toLowerCase().substr(1);
+      var extension2 = extname("x." + path).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -21119,7 +21119,7 @@ var require_form_data = __commonJS({
   "node_modules/form-data/lib/form_data.js"(exports, module2) {
     var CombinedStream = require_combined_stream();
     var util = require("util");
-    var path2 = require("path");
+    var path = require("path");
     var http = require("http");
     var https = require("https");
     var parseUrl = require("url").parse;
@@ -21246,11 +21246,11 @@ var require_form_data = __commonJS({
     FormData2.prototype._getContentDisposition = function(value, options) {
       var filename, contentDisposition;
       if (typeof options.filepath === "string") {
-        filename = path2.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value.name || value.path) {
-        filename = path2.basename(options.filename || value.name || value.path);
+        filename = path.basename(options.filename || value.name || value.path);
       } else if (value.readable && value.hasOwnProperty("httpVersion")) {
-        filename = path2.basename(value.client._httpMessage.path || "");
+        filename = path.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         contentDisposition = 'filename="' + filename + '"';
@@ -21521,7 +21521,6 @@ var generateReport = async (results) => {
 
 // src/github.js
 var import_fs = require("fs");
-var import_path = __toESM(require("path"), 1);
 var import_github = __toESM(require_github(), 1);
 
 // src/settings.js
@@ -21579,7 +21578,7 @@ var getChangedFiles = async () => {
     repo: import_github.context.repo.repo,
     pull_number: pullRequest.number
   });
-  const markdownFiles = changedFiles.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
+  const markdownFiles = changedFiles.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i));
   return markdownFiles;
 };
 

@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import path from 'path';
 import { context, getOctokit } from '@actions/github';
 import { GITHUB_TOKEN } from './settings';
 
@@ -64,8 +63,7 @@ export const getChangedFiles = async () => {
     const markdownFiles = changedFiles.data
         .map(file => file.filename)
         .filter(f => !f.match(/\node_modules\//))
-        .filter(f => f.match(/\.(md|markdown)$/i))
-        .map(f => path.resolve(f));
+        .filter(f => f.match(/\.(md|markdown)$/i));
 
     return markdownFiles; 
 };
