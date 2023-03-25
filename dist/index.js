@@ -2073,7 +2073,7 @@ var require_core = __commonJS({
       process.env["PATH"] = `${inputPath}${path2.delimiter}${process.env["PATH"]}`;
     }
     exports.addPath = addPath;
-    function getInput(name, options) {
+    function getInput2(name, options) {
       const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
       if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
@@ -2083,9 +2083,9 @@ var require_core = __commonJS({
       }
       return val.trim();
     }
-    exports.getInput = getInput;
+    exports.getInput = getInput2;
     function getMultilineInput(name, options) {
-      const inputs = getInput(name, options).split("\n").filter((x) => x !== "");
+      const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
       if (options && options.trimWhitespace === false) {
         return inputs;
       }
@@ -2095,7 +2095,7 @@ var require_core = __commonJS({
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
-      const val = getInput(name, options);
+      const val = getInput2(name, options);
       if (trueValue.includes(val))
         return true;
       if (falseValue.includes(val))
@@ -7761,155 +7761,6 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/dotenv/package.json
-var require_package = __commonJS({
-  "node_modules/dotenv/package.json"(exports, module2) {
-    module2.exports = {
-      name: "dotenv",
-      version: "16.0.3",
-      description: "Loads environment variables from .env file",
-      main: "lib/main.js",
-      types: "lib/main.d.ts",
-      exports: {
-        ".": {
-          require: "./lib/main.js",
-          types: "./lib/main.d.ts",
-          default: "./lib/main.js"
-        },
-        "./config": "./config.js",
-        "./config.js": "./config.js",
-        "./lib/env-options": "./lib/env-options.js",
-        "./lib/env-options.js": "./lib/env-options.js",
-        "./lib/cli-options": "./lib/cli-options.js",
-        "./lib/cli-options.js": "./lib/cli-options.js",
-        "./package.json": "./package.json"
-      },
-      scripts: {
-        "dts-check": "tsc --project tests/types/tsconfig.json",
-        lint: "standard",
-        "lint-readme": "standard-markdown",
-        pretest: "npm run lint && npm run dts-check",
-        test: "tap tests/*.js --100 -Rspec",
-        prerelease: "npm test",
-        release: "standard-version"
-      },
-      repository: {
-        type: "git",
-        url: "git://github.com/motdotla/dotenv.git"
-      },
-      keywords: [
-        "dotenv",
-        "env",
-        ".env",
-        "environment",
-        "variables",
-        "config",
-        "settings"
-      ],
-      readmeFilename: "README.md",
-      license: "BSD-2-Clause",
-      devDependencies: {
-        "@types/node": "^17.0.9",
-        decache: "^4.6.1",
-        dtslint: "^3.7.0",
-        sinon: "^12.0.1",
-        standard: "^16.0.4",
-        "standard-markdown": "^7.1.0",
-        "standard-version": "^9.3.2",
-        tap: "^15.1.6",
-        tar: "^6.1.11",
-        typescript: "^4.5.4"
-      },
-      engines: {
-        node: ">=12"
-      }
-    };
-  }
-});
-
-// node_modules/dotenv/lib/main.js
-var require_main = __commonJS({
-  "node_modules/dotenv/lib/main.js"(exports, module2) {
-    var fs3 = require("fs");
-    var path2 = require("path");
-    var os = require("os");
-    var packageJson = require_package();
-    var version2 = packageJson.version;
-    var LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
-    function parse2(src) {
-      const obj = {};
-      let lines = src.toString();
-      lines = lines.replace(/\r\n?/mg, "\n");
-      let match;
-      while ((match = LINE.exec(lines)) != null) {
-        const key = match[1];
-        let value = match[2] || "";
-        value = value.trim();
-        const maybeQuote = value[0];
-        value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
-        if (maybeQuote === '"') {
-          value = value.replace(/\\n/g, "\n");
-          value = value.replace(/\\r/g, "\r");
-        }
-        obj[key] = value;
-      }
-      return obj;
-    }
-    function _log(message) {
-      console.log(`[dotenv@${version2}][DEBUG] ${message}`);
-    }
-    function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path2.join(os.homedir(), envPath.slice(1)) : envPath;
-    }
-    function config2(options) {
-      let dotenvPath = path2.resolve(process.cwd(), ".env");
-      let encoding = "utf8";
-      const debug = Boolean(options && options.debug);
-      const override = Boolean(options && options.override);
-      if (options) {
-        if (options.path != null) {
-          dotenvPath = _resolveHome(options.path);
-        }
-        if (options.encoding != null) {
-          encoding = options.encoding;
-        }
-      }
-      try {
-        const parsed = DotenvModule.parse(fs3.readFileSync(dotenvPath, { encoding }));
-        Object.keys(parsed).forEach(function(key) {
-          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-            process.env[key] = parsed[key];
-          } else {
-            if (override === true) {
-              process.env[key] = parsed[key];
-            }
-            if (debug) {
-              if (override === true) {
-                _log(`"${key}" is already defined in \`process.env\` and WAS overwritten`);
-              } else {
-                _log(`"${key}" is already defined in \`process.env\` and was NOT overwritten`);
-              }
-            }
-          }
-        });
-        return { parsed };
-      } catch (e) {
-        if (debug) {
-          _log(`Failed to load ${dotenvPath} ${e.message}`);
-        }
-        return { error: e };
-      }
-    }
-    var DotenvModule = {
-      config: config2,
-      parse: parse2
-    };
-    module2.exports.config = DotenvModule.config;
-    module2.exports.parse = DotenvModule.parse;
-    module2.exports = DotenvModule;
-  }
-});
-
 // node_modules/axios/lib/helpers/bind.js
 var require_bind = __commonJS({
   "node_modules/axios/lib/helpers/bind.js"(exports, module2) {
@@ -8183,8 +8034,8 @@ var require_normalizeHeaderName = __commonJS({
 var require_enhanceError = __commonJS({
   "node_modules/axios/lib/core/enhanceError.js"(exports, module2) {
     "use strict";
-    module2.exports = function enhanceError(error, config2, code, request, response) {
-      error.config = config2;
+    module2.exports = function enhanceError(error, config, code, request, response) {
+      error.config = config;
       if (code) {
         error.code = code;
       }
@@ -8232,9 +8083,9 @@ var require_createError = __commonJS({
   "node_modules/axios/lib/core/createError.js"(exports, module2) {
     "use strict";
     var enhanceError = require_enhanceError();
-    module2.exports = function createError(message, config2, code, request, response) {
+    module2.exports = function createError(message, config, code, request, response) {
       var error = new Error(message);
-      return enhanceError(error, config2, code, request, response);
+      return enhanceError(error, config, code, request, response);
     };
   }
 });
@@ -8476,32 +8327,32 @@ var require_xhr = __commonJS({
     var createError = require_createError();
     var transitionalDefaults = require_transitional();
     var Cancel = require_Cancel();
-    module2.exports = function xhrAdapter(config2) {
+    module2.exports = function xhrAdapter(config) {
       return new Promise(function dispatchXhrRequest(resolve, reject) {
-        var requestData = config2.data;
-        var requestHeaders = config2.headers;
-        var responseType = config2.responseType;
+        var requestData = config.data;
+        var requestHeaders = config.headers;
+        var responseType = config.responseType;
         var onCanceled;
         function done() {
-          if (config2.cancelToken) {
-            config2.cancelToken.unsubscribe(onCanceled);
+          if (config.cancelToken) {
+            config.cancelToken.unsubscribe(onCanceled);
           }
-          if (config2.signal) {
-            config2.signal.removeEventListener("abort", onCanceled);
+          if (config.signal) {
+            config.signal.removeEventListener("abort", onCanceled);
           }
         }
         if (utils.isFormData(requestData)) {
           delete requestHeaders["Content-Type"];
         }
         var request = new XMLHttpRequest();
-        if (config2.auth) {
-          var username = config2.auth.username || "";
-          var password = config2.auth.password ? unescape(encodeURIComponent(config2.auth.password)) : "";
+        if (config.auth) {
+          var username = config.auth.username || "";
+          var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : "";
           requestHeaders.Authorization = "Basic " + btoa(username + ":" + password);
         }
-        var fullPath = buildFullPath(config2.baseURL, config2.url);
-        request.open(config2.method.toUpperCase(), buildURL(fullPath, config2.params, config2.paramsSerializer), true);
-        request.timeout = config2.timeout;
+        var fullPath = buildFullPath(config.baseURL, config.url);
+        request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
+        request.timeout = config.timeout;
         function onloadend() {
           if (!request) {
             return;
@@ -8513,7 +8364,7 @@ var require_xhr = __commonJS({
             status: request.status,
             statusText: request.statusText,
             headers: responseHeaders,
-            config: config2,
+            config,
             request
           };
           settle(function _resolve(value) {
@@ -8542,31 +8393,31 @@ var require_xhr = __commonJS({
           if (!request) {
             return;
           }
-          reject(createError("Request aborted", config2, "ECONNABORTED", request));
+          reject(createError("Request aborted", config, "ECONNABORTED", request));
           request = null;
         };
         request.onerror = function handleError() {
-          reject(createError("Network Error", config2, null, request));
+          reject(createError("Network Error", config, null, request));
           request = null;
         };
         request.ontimeout = function handleTimeout() {
-          var timeoutErrorMessage = config2.timeout ? "timeout of " + config2.timeout + "ms exceeded" : "timeout exceeded";
-          var transitional = config2.transitional || transitionalDefaults;
-          if (config2.timeoutErrorMessage) {
-            timeoutErrorMessage = config2.timeoutErrorMessage;
+          var timeoutErrorMessage = config.timeout ? "timeout of " + config.timeout + "ms exceeded" : "timeout exceeded";
+          var transitional = config.transitional || transitionalDefaults;
+          if (config.timeoutErrorMessage) {
+            timeoutErrorMessage = config.timeoutErrorMessage;
           }
           reject(createError(
             timeoutErrorMessage,
-            config2,
+            config,
             transitional.clarifyTimeoutError ? "ETIMEDOUT" : "ECONNABORTED",
             request
           ));
           request = null;
         };
         if (utils.isStandardBrowserEnv()) {
-          var xsrfValue = (config2.withCredentials || isURLSameOrigin(fullPath)) && config2.xsrfCookieName ? cookies.read(config2.xsrfCookieName) : void 0;
+          var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : void 0;
           if (xsrfValue) {
-            requestHeaders[config2.xsrfHeaderName] = xsrfValue;
+            requestHeaders[config.xsrfHeaderName] = xsrfValue;
           }
         }
         if ("setRequestHeader" in request) {
@@ -8578,19 +8429,19 @@ var require_xhr = __commonJS({
             }
           });
         }
-        if (!utils.isUndefined(config2.withCredentials)) {
-          request.withCredentials = !!config2.withCredentials;
+        if (!utils.isUndefined(config.withCredentials)) {
+          request.withCredentials = !!config.withCredentials;
         }
         if (responseType && responseType !== "json") {
-          request.responseType = config2.responseType;
+          request.responseType = config.responseType;
         }
-        if (typeof config2.onDownloadProgress === "function") {
-          request.addEventListener("progress", config2.onDownloadProgress);
+        if (typeof config.onDownloadProgress === "function") {
+          request.addEventListener("progress", config.onDownloadProgress);
         }
-        if (typeof config2.onUploadProgress === "function" && request.upload) {
-          request.upload.addEventListener("progress", config2.onUploadProgress);
+        if (typeof config.onUploadProgress === "function" && request.upload) {
+          request.upload.addEventListener("progress", config.onUploadProgress);
         }
-        if (config2.cancelToken || config2.signal) {
+        if (config.cancelToken || config.signal) {
           onCanceled = function(cancel) {
             if (!request) {
               return;
@@ -8599,9 +8450,9 @@ var require_xhr = __commonJS({
             request.abort();
             request = null;
           };
-          config2.cancelToken && config2.cancelToken.subscribe(onCanceled);
-          if (config2.signal) {
-            config2.signal.aborted ? onCanceled() : config2.signal.addEventListener("abort", onCanceled);
+          config.cancelToken && config.cancelToken.subscribe(onCanceled);
+          if (config.signal) {
+            config.signal.aborted ? onCanceled() : config.signal.addEventListener("abort", onCanceled);
           }
         }
         if (!requestData) {
@@ -9125,15 +8976,15 @@ var require_http = __commonJS({
         setProxy(redirection, proxy, redirection.href);
       };
     }
-    module2.exports = function httpAdapter(config2) {
+    module2.exports = function httpAdapter(config) {
       return new Promise(function dispatchHttpRequest(resolvePromise, rejectPromise) {
         var onCanceled;
         function done() {
-          if (config2.cancelToken) {
-            config2.cancelToken.unsubscribe(onCanceled);
+          if (config.cancelToken) {
+            config.cancelToken.unsubscribe(onCanceled);
           }
-          if (config2.signal) {
-            config2.signal.removeEventListener("abort", onCanceled);
+          if (config.signal) {
+            config.signal.removeEventListener("abort", onCanceled);
           }
         }
         var resolve = function resolve2(value) {
@@ -9146,8 +8997,8 @@ var require_http = __commonJS({
           rejected = true;
           rejectPromise(value);
         };
-        var data = config2.data;
-        var headers = config2.headers;
+        var data = config.data;
+        var headers = config.headers;
         var headerNames = {};
         Object.keys(headers).forEach(function storeLowerName(name) {
           headerNames[name.toLowerCase()] = name;
@@ -9168,23 +9019,23 @@ var require_http = __commonJS({
           } else {
             return reject(createError(
               "Data after transformation must be a string, an ArrayBuffer, a Buffer, or a Stream",
-              config2
+              config
             ));
           }
-          if (config2.maxBodyLength > -1 && data.length > config2.maxBodyLength) {
-            return reject(createError("Request body larger than maxBodyLength limit", config2));
+          if (config.maxBodyLength > -1 && data.length > config.maxBodyLength) {
+            return reject(createError("Request body larger than maxBodyLength limit", config));
           }
           if (!headerNames["content-length"]) {
             headers["Content-Length"] = data.length;
           }
         }
         var auth = void 0;
-        if (config2.auth) {
-          var username = config2.auth.username || "";
-          var password = config2.auth.password || "";
+        if (config.auth) {
+          var username = config.auth.username || "";
+          var password = config.auth.password || "";
           auth = username + ":" + password;
         }
-        var fullPath = buildFullPath(config2.baseURL, config2.url);
+        var fullPath = buildFullPath(config.baseURL, config.url);
         var parsed = url.parse(fullPath);
         var protocol = parsed.protocol || "http:";
         if (!auth && parsed.auth) {
@@ -9197,31 +9048,31 @@ var require_http = __commonJS({
           delete headers[headerNames.authorization];
         }
         var isHttpsRequest = isHttps.test(protocol);
-        var agent = isHttpsRequest ? config2.httpsAgent : config2.httpAgent;
+        var agent = isHttpsRequest ? config.httpsAgent : config.httpAgent;
         try {
-          buildURL(parsed.path, config2.params, config2.paramsSerializer).replace(/^\?/, "");
+          buildURL(parsed.path, config.params, config.paramsSerializer).replace(/^\?/, "");
         } catch (err) {
           var customErr = new Error(err.message);
-          customErr.config = config2;
-          customErr.url = config2.url;
+          customErr.config = config;
+          customErr.url = config.url;
           customErr.exists = true;
           reject(customErr);
         }
         var options = {
-          path: buildURL(parsed.path, config2.params, config2.paramsSerializer).replace(/^\?/, ""),
-          method: config2.method.toUpperCase(),
+          path: buildURL(parsed.path, config.params, config.paramsSerializer).replace(/^\?/, ""),
+          method: config.method.toUpperCase(),
           headers,
           agent,
-          agents: { http: config2.httpAgent, https: config2.httpsAgent },
+          agents: { http: config.httpAgent, https: config.httpsAgent },
           auth
         };
-        if (config2.socketPath) {
-          options.socketPath = config2.socketPath;
+        if (config.socketPath) {
+          options.socketPath = config.socketPath;
         } else {
           options.hostname = parsed.hostname;
           options.port = parsed.port;
         }
-        var proxy = config2.proxy;
+        var proxy = config.proxy;
         if (!proxy && proxy !== false) {
           var proxyEnv = protocol.slice(0, -1) + "_proxy";
           var proxyUrl = process.env[proxyEnv] || process.env[proxyEnv.toUpperCase()];
@@ -9268,28 +9119,28 @@ var require_http = __commonJS({
         }
         var transport;
         var isHttpsProxy = isHttpsRequest && (proxy ? isHttps.test(proxy.protocol) : true);
-        if (config2.transport) {
-          transport = config2.transport;
-        } else if (config2.maxRedirects === 0) {
+        if (config.transport) {
+          transport = config.transport;
+        } else if (config.maxRedirects === 0) {
           transport = isHttpsProxy ? https : http;
         } else {
-          if (config2.maxRedirects) {
-            options.maxRedirects = config2.maxRedirects;
+          if (config.maxRedirects) {
+            options.maxRedirects = config.maxRedirects;
           }
           transport = isHttpsProxy ? httpsFollow : httpFollow;
         }
-        if (config2.maxBodyLength > -1) {
-          options.maxBodyLength = config2.maxBodyLength;
+        if (config.maxBodyLength > -1) {
+          options.maxBodyLength = config.maxBodyLength;
         }
-        if (config2.insecureHTTPParser) {
-          options.insecureHTTPParser = config2.insecureHTTPParser;
+        if (config.insecureHTTPParser) {
+          options.insecureHTTPParser = config.insecureHTTPParser;
         }
         var req = transport.request(options, function handleResponse(res) {
           if (req.aborted)
             return;
           var stream = res;
           var lastRequest = res.req || req;
-          if (res.statusCode !== 204 && lastRequest.method !== "HEAD" && config2.decompress !== false) {
+          if (res.statusCode !== 204 && lastRequest.method !== "HEAD" && config.decompress !== false) {
             switch (res.headers["content-encoding"]) {
               case "gzip":
               case "compress":
@@ -9303,10 +9154,10 @@ var require_http = __commonJS({
             status: res.statusCode,
             statusText: res.statusMessage,
             headers: res.headers,
-            config: config2,
+            config,
             request: lastRequest
           };
-          if (config2.responseType === "stream") {
+          if (config.responseType === "stream") {
             response.data = stream;
             settle(resolve, reject, response);
           } else {
@@ -9315,12 +9166,12 @@ var require_http = __commonJS({
             stream.on("data", function handleStreamData(chunk) {
               responseBuffer.push(chunk);
               totalResponseBytes += chunk.length;
-              if (config2.maxContentLength > -1 && totalResponseBytes > config2.maxContentLength) {
+              if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
                 rejected = true;
                 stream.destroy();
                 reject(createError(
-                  "maxContentLength size of " + config2.maxContentLength + " exceeded",
-                  config2,
+                  "maxContentLength size of " + config.maxContentLength + " exceeded",
+                  config,
                   null,
                   lastRequest
                 ));
@@ -9331,25 +9182,25 @@ var require_http = __commonJS({
                 return;
               }
               stream.destroy();
-              reject(createError("error request aborted", config2, "ERR_REQUEST_ABORTED", lastRequest));
+              reject(createError("error request aborted", config, "ERR_REQUEST_ABORTED", lastRequest));
             });
             stream.on("error", function handleStreamError(err) {
               if (req.aborted)
                 return;
-              reject(enhanceError(err, config2, null, lastRequest));
+              reject(enhanceError(err, config, null, lastRequest));
             });
             stream.on("end", function handleStreamEnd() {
               try {
                 var responseData = responseBuffer.length === 1 ? responseBuffer[0] : Buffer.concat(responseBuffer);
-                if (config2.responseType !== "arraybuffer") {
-                  responseData = responseData.toString(config2.responseEncoding);
-                  if (!config2.responseEncoding || config2.responseEncoding === "utf8") {
+                if (config.responseType !== "arraybuffer") {
+                  responseData = responseData.toString(config.responseEncoding);
+                  if (!config.responseEncoding || config.responseEncoding === "utf8") {
                     responseData = utils.stripBOM(responseData);
                   }
                 }
                 response.data = responseData;
               } catch (err) {
-                reject(enhanceError(err, config2, err.code, response.request, response));
+                reject(enhanceError(err, config, err.code, response.request, response));
               }
               settle(resolve, reject, response);
             });
@@ -9358,17 +9209,17 @@ var require_http = __commonJS({
         req.on("error", function handleRequestError(err) {
           if (req.aborted && err.code !== "ERR_FR_TOO_MANY_REDIRECTS")
             return;
-          reject(enhanceError(err, config2, null, req));
+          reject(enhanceError(err, config, null, req));
         });
         req.on("socket", function handleRequestSocket(socket) {
           socket.setKeepAlive(true, 1e3 * 60);
         });
-        if (config2.timeout) {
-          var timeout = parseInt(config2.timeout, 10);
+        if (config.timeout) {
+          var timeout = parseInt(config.timeout, 10);
           if (isNaN(timeout)) {
             reject(createError(
               "error trying to parse `config.timeout` to int",
-              config2,
+              config,
               "ERR_PARSE_TIMEOUT",
               req
             ));
@@ -9377,35 +9228,35 @@ var require_http = __commonJS({
           req.setTimeout(timeout, function handleRequestTimeout() {
             req.abort();
             var timeoutErrorMessage = "";
-            if (config2.timeoutErrorMessage) {
-              timeoutErrorMessage = config2.timeoutErrorMessage;
+            if (config.timeoutErrorMessage) {
+              timeoutErrorMessage = config.timeoutErrorMessage;
             } else {
-              timeoutErrorMessage = "timeout of " + config2.timeout + "ms exceeded";
+              timeoutErrorMessage = "timeout of " + config.timeout + "ms exceeded";
             }
-            var transitional = config2.transitional || transitionalDefaults;
+            var transitional = config.transitional || transitionalDefaults;
             reject(createError(
               timeoutErrorMessage,
-              config2,
+              config,
               transitional.clarifyTimeoutError ? "ETIMEDOUT" : "ECONNABORTED",
               req
             ));
           });
         }
-        if (config2.cancelToken || config2.signal) {
+        if (config.cancelToken || config.signal) {
           onCanceled = function(cancel) {
             if (req.aborted)
               return;
             req.abort();
             reject(!cancel || cancel && cancel.type ? new Cancel("canceled") : cancel);
           };
-          config2.cancelToken && config2.cancelToken.subscribe(onCanceled);
-          if (config2.signal) {
-            config2.signal.aborted ? onCanceled() : config2.signal.addEventListener("abort", onCanceled);
+          config.cancelToken && config.cancelToken.subscribe(onCanceled);
+          if (config.signal) {
+            config.signal.aborted ? onCanceled() : config.signal.addEventListener("abort", onCanceled);
           }
         }
         if (utils.isStream(data)) {
           data.on("error", function handleStreamError(err) {
-            reject(enhanceError(err, config2, null, req));
+            reject(enhanceError(err, config, null, req));
           }).pipe(req);
         } else {
           req.end(data);
@@ -9557,53 +9408,53 @@ var require_dispatchRequest = __commonJS({
     var isCancel = require_isCancel();
     var defaults = require_defaults();
     var Cancel = require_Cancel();
-    function throwIfCancellationRequested(config2) {
-      if (config2.cancelToken) {
-        config2.cancelToken.throwIfRequested();
+    function throwIfCancellationRequested(config) {
+      if (config.cancelToken) {
+        config.cancelToken.throwIfRequested();
       }
-      if (config2.signal && config2.signal.aborted) {
+      if (config.signal && config.signal.aborted) {
         throw new Cancel("canceled");
       }
     }
-    module2.exports = function dispatchRequest(config2) {
-      throwIfCancellationRequested(config2);
-      config2.headers = config2.headers || {};
-      config2.data = transformData.call(
-        config2,
-        config2.data,
-        config2.headers,
-        config2.transformRequest
+    module2.exports = function dispatchRequest(config) {
+      throwIfCancellationRequested(config);
+      config.headers = config.headers || {};
+      config.data = transformData.call(
+        config,
+        config.data,
+        config.headers,
+        config.transformRequest
       );
-      config2.headers = utils.merge(
-        config2.headers.common || {},
-        config2.headers[config2.method] || {},
-        config2.headers
+      config.headers = utils.merge(
+        config.headers.common || {},
+        config.headers[config.method] || {},
+        config.headers
       );
       utils.forEach(
         ["delete", "get", "head", "post", "put", "patch", "common"],
         function cleanHeaderConfig(method) {
-          delete config2.headers[method];
+          delete config.headers[method];
         }
       );
-      var adapter = config2.adapter || defaults.adapter;
-      return adapter(config2).then(function onAdapterResolution(response) {
-        throwIfCancellationRequested(config2);
+      var adapter = config.adapter || defaults.adapter;
+      return adapter(config).then(function onAdapterResolution(response) {
+        throwIfCancellationRequested(config);
         response.data = transformData.call(
-          config2,
+          config,
           response.data,
           response.headers,
-          config2.transformResponse
+          config.transformResponse
         );
         return response;
       }, function onAdapterRejection(reason) {
         if (!isCancel(reason)) {
-          throwIfCancellationRequested(config2);
+          throwIfCancellationRequested(config);
           if (reason && reason.response) {
             reason.response.data = transformData.call(
-              config2,
+              config,
               reason.response.data,
               reason.response.headers,
-              config2.transformResponse
+              config.transformResponse
             );
           }
         }
@@ -9620,7 +9471,7 @@ var require_mergeConfig = __commonJS({
     var utils = require_utils5();
     module2.exports = function mergeConfig(config1, config2) {
       config2 = config2 || {};
-      var config3 = {};
+      var config = {};
       function getMergedValue(target, source) {
         if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
           return utils.merge(target, source);
@@ -9688,9 +9539,9 @@ var require_mergeConfig = __commonJS({
       utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
         var merge2 = mergeMap[prop] || mergeDeepProperties;
         var configValue = merge2(prop);
-        utils.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config3[prop] = configValue);
+        utils.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config[prop] = configValue);
       });
-      return config3;
+      return config;
     };
   }
 });
@@ -9774,22 +9625,22 @@ var require_Axios = __commonJS({
         response: new InterceptorManager()
       };
     }
-    Axios.prototype.request = function request(configOrUrl, config2) {
+    Axios.prototype.request = function request(configOrUrl, config) {
       if (typeof configOrUrl === "string") {
-        config2 = config2 || {};
-        config2.url = configOrUrl;
+        config = config || {};
+        config.url = configOrUrl;
       } else {
-        config2 = configOrUrl || {};
+        config = configOrUrl || {};
       }
-      config2 = mergeConfig(this.defaults, config2);
-      if (config2.method) {
-        config2.method = config2.method.toLowerCase();
+      config = mergeConfig(this.defaults, config);
+      if (config.method) {
+        config.method = config.method.toLowerCase();
       } else if (this.defaults.method) {
-        config2.method = this.defaults.method.toLowerCase();
+        config.method = this.defaults.method.toLowerCase();
       } else {
-        config2.method = "get";
+        config.method = "get";
       }
-      var transitional = config2.transitional;
+      var transitional = config.transitional;
       if (transitional !== void 0) {
         validator.assertOptions(transitional, {
           silentJSONParsing: validators.transitional(validators.boolean),
@@ -9800,7 +9651,7 @@ var require_Axios = __commonJS({
       var requestInterceptorChain = [];
       var synchronousRequestInterceptors = true;
       this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-        if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config2) === false) {
+        if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config) === false) {
           return;
         }
         synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
@@ -9815,13 +9666,13 @@ var require_Axios = __commonJS({
         var chain = [dispatchRequest, void 0];
         Array.prototype.unshift.apply(chain, requestInterceptorChain);
         chain = chain.concat(responseInterceptorChain);
-        promise = Promise.resolve(config2);
+        promise = Promise.resolve(config);
         while (chain.length) {
           promise = promise.then(chain.shift(), chain.shift());
         }
         return promise;
       }
-      var newConfig = config2;
+      var newConfig = config;
       while (requestInterceptorChain.length) {
         var onFulfilled = requestInterceptorChain.shift();
         var onRejected = requestInterceptorChain.shift();
@@ -9842,22 +9693,22 @@ var require_Axios = __commonJS({
       }
       return promise;
     };
-    Axios.prototype.getUri = function getUri(config2) {
-      config2 = mergeConfig(this.defaults, config2);
-      return buildURL(config2.url, config2.params, config2.paramsSerializer).replace(/^\?/, "");
+    Axios.prototype.getUri = function getUri(config) {
+      config = mergeConfig(this.defaults, config);
+      return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, "");
     };
     utils.forEach(["delete", "get", "head", "options"], function forEachMethodNoData(method) {
-      Axios.prototype[method] = function(url, config2) {
-        return this.request(mergeConfig(config2 || {}, {
+      Axios.prototype[method] = function(url, config) {
+        return this.request(mergeConfig(config || {}, {
           method,
           url,
-          data: (config2 || {}).data
+          data: (config || {}).data
         }));
       };
     });
     utils.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
-      Axios.prototype[method] = function(url, data, config2) {
-        return this.request(mergeConfig(config2 || {}, {
+      Axios.prototype[method] = function(url, data, config) {
+        return this.request(mergeConfig(config || {}, {
           method,
           url,
           data
@@ -12121,7 +11972,7 @@ var require_api = __commonJS({
 });
 
 // node_modules/openai/package.json
-var require_package2 = __commonJS({
+var require_package = __commonJS({
   "node_modules/openai/package.json"(exports, module2) {
     module2.exports = {
       name: "openai",
@@ -21584,7 +21435,7 @@ var require_configuration = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Configuration = void 0;
-    var packageJson = require_package2();
+    var packageJson = require_package();
     var Configuration2 = class {
       constructor(param = {}) {
         this.apiKey = param.apiKey;
@@ -21652,7 +21503,7 @@ var require_dist = __commonJS({
 });
 
 // index.js
-var import_core = __toESM(require_core(), 1);
+var import_core2 = __toESM(require_core(), 1);
 
 // src/report.js
 var generateReport = async (results) => {
@@ -21674,11 +21525,10 @@ var import_path = __toESM(require("path"), 1);
 var import_github = __toESM(require_github(), 1);
 
 // src/settings.js
-var dotenv = __toESM(require_main(), 1);
-dotenv.config();
-var OPENAI_PROMPT = process.env.OPENAI_PROMPT;
-var OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+var import_core = __toESM(require_core(), 1);
+var OPENAI_PROMPT = "Generate a description to be used in the SEO meta tag for the page. Do not include HTML scripts, or markdown format, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in YAML and markdown format. For the language detection, ignore the front matter portion of the blogpost. The blog post is present below:";
+var OPENAI_API_KEY = (0, import_core.getInput)("openai-api-key");
+var GITHUB_TOKEN = (0, import_core.getInput)("github-token");
 
 // src/github.js
 var createComment = async (body) => {
@@ -24448,7 +24298,7 @@ var run = async () => {
     await createComment(reportContent);
   } catch (error) {
     console.error(error);
-    (0, import_core.setFailed)(error.message);
+    (0, import_core2.setFailed)(error.message);
     throw error;
   }
 };
