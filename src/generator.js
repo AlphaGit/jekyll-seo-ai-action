@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 import { load, dump } from 'js-yaml';
 
 import { OPENAI_PROMPT } from './settings';
@@ -15,7 +15,7 @@ class DescriptionResult {
 }
 
 const generateDescription = async (page) => {
-    const pageContents = await fs.read(page, PAGE_ENCODING);
+    const pageContents = await readFile(page, PAGE_ENCODING);
     const rawFrontMatter = pageContents.match(FRONT_MATTER_REGEX)[1];
     const fronMatter = load(rawFrontMatter);
 
@@ -26,7 +26,7 @@ const generateDescription = async (page) => {
 
     fronMatter.description = description;
     const newPageContents = `---\n${dump(fronMatter)}---\n${body}`;
-    await fs.write(page, newPageContents, PAGE_ENCODING);
+    await writeFile(page, newPageContents, PAGE_ENCODING);
 
     return new DescriptionResult(page, description);
 };

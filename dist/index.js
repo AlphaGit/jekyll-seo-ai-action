@@ -518,7 +518,7 @@ var require_file_command = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
-    var fs3 = __importStar(require("fs"));
+    var fs2 = __importStar(require("fs"));
     var os = __importStar(require("os"));
     var uuid_1 = (init_esm_node(), __toCommonJS(esm_node_exports));
     var utils_1 = require_utils();
@@ -527,10 +527,10 @@ var require_file_command = __commonJS({
       if (!filePath) {
         throw new Error(`Unable to find environment variable for file command ${command}`);
       }
-      if (!fs3.existsSync(filePath)) {
+      if (!fs2.existsSync(filePath)) {
         throw new Error(`Missing file at path: ${filePath}`);
       }
-      fs3.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+      fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
         encoding: "utf8"
       });
     }
@@ -1668,7 +1668,7 @@ var require_summary = __commonJS({
     exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
     var os_1 = require("os");
     var fs_1 = require("fs");
-    var { access, appendFile, writeFile } = fs_1.promises;
+    var { access, appendFile, writeFile: writeFile2 } = fs_1.promises;
     exports.SUMMARY_ENV_VAR = "GITHUB_STEP_SUMMARY";
     exports.SUMMARY_DOCS_URL = "https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary";
     var Summary = class {
@@ -1726,7 +1726,7 @@ var require_summary = __commonJS({
         return __awaiter(this, void 0, void 0, function* () {
           const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
           const filePath = yield this.filePath();
-          const writeFunc = overwrite ? writeFile : appendFile;
+          const writeFunc = overwrite ? writeFile2 : appendFile;
           yield writeFunc(filePath, this._buffer, { encoding: "utf8" });
           return this.emptyBuffer();
         });
@@ -21123,7 +21123,7 @@ var require_form_data = __commonJS({
     var http = require("http");
     var https = require("https");
     var parseUrl = require("url").parse;
-    var fs3 = require("fs");
+    var fs2 = require("fs");
     var Stream = require("stream").Stream;
     var mime = require_mime_types();
     var asynckit = require_asynckit();
@@ -21188,7 +21188,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs3.stat(value.path, function(err, stat) {
+          fs2.stat(value.path, function(err, stat) {
             var fileSize;
             if (err) {
               callback(err);
@@ -21583,7 +21583,7 @@ var getChangedFiles = async () => {
 };
 
 // src/generator.js
-var import_fs2 = require("fs");
+var import_promises = require("fs/promises");
 
 // node_modules/js-yaml/dist/js-yaml.mjs
 function isNothing(subject) {
@@ -24268,7 +24268,7 @@ var DescriptionResult = class {
   }
 };
 var generateDescription = async (page) => {
-  const pageContents = await import_fs2.promises.read(page, PAGE_ENCODING);
+  const pageContents = await (0, import_promises.readFile)(page, PAGE_ENCODING);
   const rawFrontMatter = pageContents.match(FRONT_MATTER_REGEX)[1];
   const fronMatter = load(rawFrontMatter);
   const body = pageContents.replace(FRONT_MATTER_REGEX, "");
@@ -24278,7 +24278,7 @@ var generateDescription = async (page) => {
   const newPageContents = `---
 ${dump(fronMatter)}---
 ${body}`;
-  await import_fs2.promises.write(page, newPageContents, PAGE_ENCODING);
+  await (0, import_promises.writeFile)(page, newPageContents, PAGE_ENCODING);
   return new DescriptionResult(page, description);
 };
 var generateDescriptions = async (pages) => {
