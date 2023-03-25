@@ -21542,7 +21542,7 @@ var createComment = async (body) => {
 var createBlobs = async ({ owner, repo, filePaths }) => {
   return await Promise.all(filePaths.map(async (filePath) => {
     const content = await import_fs.promises.readFile(filePath, { encoding: "base64" });
-    const blob = gitClient.createBlob({ owner, repo, content, encoding: "base64" });
+    const blob = await gitClient.createBlob({ owner, repo, content, encoding: "base64" });
     return {
       path: filePath,
       type: "blob",
