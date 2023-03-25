@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
-import { load, dump } from 'js-yaml';
+import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
 
 import { OPENAI_PROMPT } from './settings';
 import { getModelResponse } from './openai-client';
@@ -17,7 +17,7 @@ class DescriptionResult {
 const generateDescription = async (page) => {
     const pageContents = await readFile(page, PAGE_ENCODING);
     const rawFrontMatter = pageContents.match(FRONT_MATTER_REGEX)[1];
-    const fronMatter = load(rawFrontMatter);
+    const fronMatter = yamlLoad(rawFrontMatter);
 
     const body = pageContents.replace(FRONT_MATTER_REGEX, '');
 
@@ -25,7 +25,7 @@ const generateDescription = async (page) => {
     const description = await getModelResponse(prompt);
 
     fronMatter.description = description;
-    const newPageContents = `---\n${dump(fronMatter)}---\n${body}`;
+    const newPageContents = `---\n${yamlDump(fronMatter)}---\n${body}`;
     await writeFile(page, newPageContents, PAGE_ENCODING);
 
     return new DescriptionResult(page, description);
