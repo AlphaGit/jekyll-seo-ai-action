@@ -21569,6 +21569,10 @@ var createCommit = async (changedFiles) => {
   const commit = await gitClient.createCommit({
     owner,
     repo,
+    author: {
+      name: "Jekyll SEO AI Action",
+      email: "jekyll-seo-action+github-actions[bot]@users.noreply.github.com"
+    },
     message: "Generated descriptions",
     tree: tree.data.sha,
     parents: [headSHA]
