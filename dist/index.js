@@ -21527,7 +21527,7 @@ var import_github = __toESM(require_github(), 1);
 
 // src/settings.js
 var import_core = __toESM(require_core(), 1);
-var OPENAI_PROMPT = "Generate a description to be used in the SEO meta tag for the page. Do not include HTML scripts, or markdown format, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in YAML and markdown format. For the language detection, ignore the front matter portion of the blogpost. The blog post is present below:\n{body}";
+var OPENAI_PROMPT = "Generate a description to be used in the SEO meta tag for the page. Do not include any kind of code in the response, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in markdown format. The blog post is present below:\n{body}";
 var OPENAI_API_KEY = (0, import_core.getInput)("openai-api-key");
 var GITHUB_TOKEN = (0, import_core.getInput)("github-token");
 
@@ -24258,7 +24258,8 @@ var getModelResponse = async (prompt) => {
       temperature: 0.7,
       max_tokens: 256
     });
-    return response.data.choices[0].text;
+    const generatedContent = response.data.choices[0].text;
+    return (generatedContent || "").trim();
   } catch (error) {
     if (error.response) {
       console.log(error.response.data);
