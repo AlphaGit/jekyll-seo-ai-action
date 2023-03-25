@@ -24245,17 +24245,24 @@ var safeDump = renamed("safeDump", "dump");
 // src/openai-client.js
 var import_openai = __toESM(require_dist(), 1);
 var getModelResponse = async (prompt) => {
-  const configuration = new import_openai.Configuration({
-    apiKey: OPENAI_API_KEY
-  });
-  const openai = new import_openai.OpenAIApi(configuration);
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt,
-    temperature: 0.7,
-    maxTokens: 256
-  });
-  return response.data.choices[0].text;
+  try {
+    const configuration = new import_openai.Configuration({
+      apiKey: OPENAI_API_KEY
+    });
+    const openai = new import_openai.OpenAIApi(configuration);
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt,
+      temperature: 0.7,
+      maxTokens: 256
+    });
+    return response.data.choices[0].text;
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.data);
+    }
+    throw error;
+  }
 };
 
 // src/generator.js
