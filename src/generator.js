@@ -16,11 +16,24 @@ class DescriptionResult {
 
 const generateDescription = async (page) => {
     const pageContents = await readFile(page, PAGE_ENCODING);
-    const rawFrontMatter = pageContents.match(FRONT_MATTER_REGEX)[1];
+    const regexMatch = pageContents.match(FRONT_MATTER_REGEX);
+    if (!regexMatch || regexMatch.length < 2) {
+        console.warn(`No front matter found for ${page} -- is it really a blog post?`);
+        return null;
+    }
+    const rawFrontMatter = regexMatch[1];
     const fronMatter = yamlLoad(rawFrontMatter);
 
-    const body = pageContents.replace(FRONT_MATTER_REGEX, '');
+    if (!fronMatter) {
+        console.warn(`No front matter found for ${page} -- is it really a blog post?`);
+        return null;
+    }
+    if (fronMatter && fronMatter.description) {
+        console.info(`Front matter already contains a description for ${page} -- skipping`);
+        return null;
+    }
 
+    const body = pageContents.replace(FRONT_MATTER_REGEX, '');
     const prompt = OPENAI_PROMPT.replace('{body}', body);
     const description = await getModelResponse(prompt);
 
@@ -35,5 +48,6 @@ export const generateDescriptions = async (pages) => {
     const resultTasks = pages.map(async (page) =>
         await generateDescription(page)
     );
-    return await Promise.all(resultTasks);
+    const descriptionResults = await Promise.all(resultTasks);
+    return descriptionResults.filter((result) => result !== null);
 };
