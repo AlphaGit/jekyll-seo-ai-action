@@ -24249,7 +24249,7 @@ var getModelResponse = async (prompt) => {
     apiKey: OPENAI_API_KEY
   });
   const openai = new import_openai.OpenAIApi(configuration);
-  const response = await openai.complete({
+  const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt,
     temperature: 0.7,

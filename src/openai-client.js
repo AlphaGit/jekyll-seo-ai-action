@@ -8,7 +8,7 @@ export const getModelResponse = async (prompt) => {
 
     const openai = new OpenAIApi(configuration);
 
-    const response = await openai.complete({
+    const response = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt,
         temperature: 0.7,
