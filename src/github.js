@@ -59,7 +59,7 @@ export const getChangedFiles = async () => {
         pull_number: pullRequest.number
     });
 
-    const markdownFiles = changedFiles
+    const markdownFiles = changedFiles.data
         .map(file => file.filename)
         .filter(f => !f.match(/\node_modules\//))
         .filter(f => f.match(/\.(md|markdown)$/i))

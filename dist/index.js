@@ -21578,7 +21578,7 @@ var getChangedFiles = async () => {
     repo: import_github.context.repo.repo,
     pull_number: pullRequest.number
   });
-  const markdownFiles = changedFiles.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
+  const markdownFiles = changedFiles.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i)).map((f) => import_path.default.resolve(f));
   return markdownFiles;
 };
 
