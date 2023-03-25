@@ -24254,7 +24254,7 @@ var getModelResponse = async (prompt) => {
       model: "text-davinci-003",
       prompt,
       temperature: 0.7,
-      maxTokens: 256
+      max_tokens: 256
     });
     return response.data.choices[0].text;
   } catch (error) {
