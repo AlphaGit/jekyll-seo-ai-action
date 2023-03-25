@@ -41,3 +41,7 @@ Set these configuration variables in your repository's settings:
 There's no need to set up a GITHUB_TOKEN variable (although you can if you want to). GitHub will automatically create a token for you and inject it in the action.
 
 **That's it!** The action will run on every pull request and will update the Jekyll files with the generated content. You can then review the changes and merge them or apply changes of your own.
+
+## Security notices
+
+For the autogeneration to happen, the contents of the posts or pages are transmitted to the OpenAI service. If this is not acceptable based on the confidenciality required for your documents, this action is not for you.
