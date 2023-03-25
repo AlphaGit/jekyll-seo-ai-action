@@ -16,7 +16,8 @@ export const getModelResponse = async (prompt) => {
             max_tokens: 256,
         });
 
-        return response.data.choices[0].text;
+        const generatedContent = response.data.choices[0].text;
+        return (generatedContent || "").trim();
     } catch (error) {
         if (error.response) {
             console.log(error.response.data);
