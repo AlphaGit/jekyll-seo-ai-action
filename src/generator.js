@@ -53,6 +53,7 @@ export const generateDescriptions = async (pages) => {
             return null;
         }
     });
-    const descriptionResults = await Promise.all(resultTasks);
-    return descriptionResults.filter((result) => result !== null);
+    const descriptionResults = await Promise.allSettled(resultTasks);
+    const fulfilledPromises = descriptionResults.filter((result) => result.status === 'fulfilled');
+    return fulfilledPromises.map((result) => result.value).filter((result) => result !== null);
 };
