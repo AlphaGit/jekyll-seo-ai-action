@@ -22275,11 +22275,13 @@ var import_github = __toESM(require_github(), 1);
 
 // src/settings.js
 var import_core = __toESM(require_core(), 1);
-var OPENAI_PROMPT = `Generate a single-paragraph description to be used in the SEO meta tag for a page. Do not include any kind of code or titles in the response, just plain text. Keep it under 160 characters. Make it a summarized version of a blog post, in the same language the blog post has. The blog post will be present in markdown format. 
+var OPENAI_PROMPT = `Provide exactly 10 words summarizing a blog post provided in markdown format, in the same language as the post. Keep the response without formatting of any kind. 
 
 ---BLOG POST BEGIN---
 {body}
 ---BLOG POST END---
+
+10 word summary:
 `;
 var OPENAI_API_KEY = (0, import_core.getInput)("openai-api-key");
 var GITHUB_TOKEN = (0, import_core.getInput)("github-token");
