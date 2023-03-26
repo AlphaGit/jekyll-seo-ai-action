@@ -22329,16 +22329,31 @@ var createCommit = async (changedFiles) => {
   });
   await gitClient.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
 };
+var listAllPullRequestFiles = async (owner, repo, pull_number, page = 1) => {
+  const response = await client.rest.pulls.listFiles({
+    owner,
+    repo,
+    pull_number,
+    per_page: 100,
+    page
+  });
+  const files = response.data;
+  if (files.length < 100) {
+    return files;
+  }
+  const followingFiles = await listAllPullRequestFiles(owner, repo, pull_number, page + 1);
+  return [...files, ...followingFiles];
+};
 var getChangedFiles = async () => {
   const pullRequest = import_github.context.payload.pull_request;
   if (!pullRequest) {
     return [];
   }
-  const changedFiles = await client.rest.pulls.listFiles({
-    owner: import_github.context.repo.owner,
-    repo: import_github.context.repo.repo,
-    pull_number: pullRequest.number
-  });
+  const changedFiles = await listAllPullRequestFiles(
+    import_github.context.repo.owner,
+    import_github.context.repo.repo,
+    pullRequest.number
+  );
   const markdownFiles = changedFiles.data.map((file) => file.filename).filter((f) => !f.match(/\node_modules\//)).filter((f) => f.match(/\.(md|markdown)$/i));
   return markdownFiles;
 };
