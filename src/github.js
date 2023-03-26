@@ -52,17 +52,35 @@ export const createCommit = async (changedFiles) => {
     await gitClient.updateRef({ owner, repo, ref: `heads/${headRef}`, sha: commit.data.sha });
 };
 
+const listAllPullRequestFiles = async (owner, repo, pull_number, page=1) => {
+    const response = await client.rest.pulls.listFiles({
+        owner,
+        repo,
+        pull_number,
+        per_page: 100,
+        page
+    });
+
+    const files = response.data;
+    if (files.length < 100) {
+        return files;
+    }
+
+    const followingFiles = await listAllPullRequestFiles(owner, repo, pull_number, page + 1);
+    return [...files, ...followingFiles];
+};
+
 export const getChangedFiles = async () => {
     const pullRequest = context.payload.pull_request;
     if (!pullRequest) {
         return [];
     }
 
-    const changedFiles = await client.rest.pulls.listFiles({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        pull_number: pullRequest.number
-    });
+    const changedFiles = await listAllPullRequestFiles(
+        context.repo.owner,
+        context.repo.repo,
+        pullRequest.number
+    );
 
     const markdownFiles = changedFiles.data
         .map(file => file.filename)
