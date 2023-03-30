@@ -38,6 +38,24 @@ describe("generateDescriptions", () => {
         expect(result).toEqual([]);
     });
 
+    it("should return an empty array when the files do not have front matters", async () => {
+        fs.readFile.mockResolvedValueOnce(`\n\nBody`);
+        const result = await generateDescriptions(["test/fixtures/without-front-matter.md"]);
+        expect(result).toEqual([]);
+    });
+
+    it("should return an empty array when the files do not have a date in the front matter", async () => {
+        fs.readFile.mockResolvedValueOnce(`---\n---\n\nBody`);
+        const result = await generateDescriptions(["test/fixtures/without-date.md"]);
+        expect(result).toEqual([]);
+    });
+
+    it("should return an empty array when the files already have descriptions in the front matter", async () => {
+        fs.readFile.mockResolvedValueOnce(`---\ndate: 2021-01-01\ndescription: This is a test description.\n---\n\nBody`);
+        const result = await generateDescriptions(["test/fixtures/with-description.md"]);
+        expect(result).toEqual([]);
+    });
+
     it("should return an array of results when given an array of files that don't contain a description", async () => {
         fs.readFile.mockResolvedValueOnce(`---\ndate: 2021-01-01\n---\n\nBody`);
         getModelResponse.mockResolvedValueOnce("This is a generated test description.");
