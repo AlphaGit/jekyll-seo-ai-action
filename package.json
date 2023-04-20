@@ -9,6 +9,7 @@
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
     "dotenv": "^16.0.3",
+    "gpt-3-encoder": "^1.1.4",
     "js-yaml": "^4.1.0",
     "openai": "^3.2.1"
   },
