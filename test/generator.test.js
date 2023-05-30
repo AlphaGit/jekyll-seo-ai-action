@@ -13,10 +13,6 @@ const { getModelResponse } = await import("../src/openai-client");
 const fs = await import("fs/promises");
 
 describe("generateDescriptions", () => {
-    // beforeEach(() => {
-    //     jest.resetAllMocks();
-    // });
-
     it("should return an empty array when given an empty array", async () => {
         const result = await generateDescriptions([]);
         expect(result).toEqual([]);
