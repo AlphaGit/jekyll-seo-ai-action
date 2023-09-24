@@ -3,10 +3,10 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Unit test
+    name: Test and build
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -18,3 +18,12 @@ jobs:
         run: npm install
       - name: Test
         run: npm test
+      - name: Build
+        run: npm run build
+      - name: Commit
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "nouser@github.com"
+          git add dist/
+          git commit -m "Update dist files"
+          git push
