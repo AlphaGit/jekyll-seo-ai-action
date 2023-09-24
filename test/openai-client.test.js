@@ -13,6 +13,19 @@ jest.unstable_mockModule("openai", () => ({
     })),
 }));
 
+jest.unstable_mockModule("openai", () => ({
+    Configuration: jest.fn(),
+    OpenAIApi: jest.fn(() => ({
+        createCompletion: jest.fn().mockResolvedValue({
+            data: {
+                choices: [{
+                    text: "Hello world",
+                }],
+            },
+        }),
+    })),
+}));
+
 const { getModelResponse } = await import("../src/openai-client");
 
 describe("getModelResponse", () => {
