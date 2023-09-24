@@ -4,7 +4,7 @@ This GitHub action will use Open AI's API to generate SEO content for your Jekyl
 
 So far it generates `description` tags for modified posts/pages based on the content. It's integrated with the pull request pipeline so that you can review the changes and merge them all together.
 
-## Setup workflow in 2 steps
+## Installation workflow in 2 steps
 
 1. **Setup workflow action**
 
