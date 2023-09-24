@@ -4,7 +4,15 @@ This GitHub action will use Open AI's API to generate SEO content for your Jekyl
 
 So far it generates `description` tags for modified posts/pages based on the content. It's integrated with the pull request pipeline so that you can review the changes and merge them all together.
 
-## Setup workflow in 2 steps
+## Installation Process
+
+To get started with the Jekyll SEO AI Action, follow these steps:
+
+1. Clone the repository to your local machine using `git clone https://github.com/AlphaGit/jekyll-seo-ai-action.git`
+2. Navigate to the cloned repository using `cd jekyll-seo-ai-action`
+3. Set up the necessary environment variables. You will need to set up `OPENAI_API_KEY` and `GITHUB_TOKEN`. You can do this in your terminal or add them to your .env file.
+
+## Setup workflow in 3 steps
 
 1. **Setup workflow action**
 
@@ -40,7 +48,17 @@ Set these configuration variables in your repository's settings:
 
 There's no need to set up a GITHUB_TOKEN variable (although you can if you want to). GitHub will automatically create a token for you and inject it in the action.
 
+3. **Follow the Installation Process**
+
+Refer to the "Installation Process" section above to clone the repository and set up the necessary environment variables.
+
 **That's it!** The action will run on every pull request and will update the Jekyll files with the generated content. You can then review the changes and merge them or apply changes of your own.
+
+## Usage
+
+Once you have the Jekyll SEO AI Action set up, it will automatically run on every pull request. It will generate SEO content for your Jekyll pages based on the content of the pages. The generated content will be added as `description` tags to the modified posts/pages.
+
+You can review the changes in the pull request. If you are satisfied with the generated content, you can merge the pull request to apply the changes to your pages. If you want to make changes to the generated content, you can do so before merging the pull request.
 
 ## Security notices
 
