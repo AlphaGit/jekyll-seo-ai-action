@@ -1,17 +1,13 @@
 import { jest } from '@jest/globals';
-import { Configuration, OpenAIApi } from 'openai';
 
 jest.unstable_mockModule("openai", () => ({
-    Configuration: jest.fn(),
-    OpenAIApi: jest.fn(() => ({
-        createCompletion: jest.fn().mockResolvedValue({
-            data: {
-                choices: [{
-                    text: "Hello world",
-                }],
-            },
-        }),
-    })),
+    createCompletion: jest.fn().mockResolvedValue({
+        data: {
+            choices: [{
+                text: "Hello world",
+            }],
+        },
+    }),
 }));
 
 const { getModelResponse } = await import("../src/openai-client");
