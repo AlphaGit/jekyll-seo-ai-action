@@ -25,5 +25,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "nouser@github.com"
           git add dist/
-          git commit -m "Update dist files"
+          git commit -m "Update dist files" --allow-empty
           git push
