@@ -10,7 +10,10 @@ const run = async () => {
         const results = await generateDescriptions(changedFiles);
         const reportContent = await generateReport(results);
 
-        await createCommit(changedFiles);
+        if (changedFiles && changedFiles.length > 0) {
+            await createCommit(changedFiles);
+        }
+        
         await createComment(reportContent);
     } catch (error) {
         console.error(error);
