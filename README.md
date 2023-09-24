@@ -6,6 +6,42 @@ So far it generates `description` tags for modified posts/pages based on the con
 
 ## Setup workflow in 2 steps
 
+## Installation Process
+
+To get started with the Jekyll SEO AI Action, follow these steps:
+
+1. Clone the repository using the following command:
+
+```bash
+git clone https://github.com/AlphaGit/jekyll-seo-ai-action.git
+```
+
+2. Navigate into the cloned repository:
+
+```bash
+cd jekyll-seo-ai-action
+```
+
+3. Install the necessary dependencies:
+
+```bash
+npm install
+```
+
+4. Run the project:
+
+```bash
+npm start
+```
+
+## Running Tests
+
+To run tests using Jest, use the following command:
+
+```bash
+npm test
+```
+
 1. **Setup workflow action**
 
 Commit to your repository a `.github/workflows/main.yml` file with these contents:
