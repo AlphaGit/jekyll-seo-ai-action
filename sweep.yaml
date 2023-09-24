@@ -1,0 +1,25 @@
+# Sweep AI turns bugs & feature requests into code changes (https://sweep.dev)
+# For details on our config file, check out our docs at https://docs.sweep.dev/usage/config
+
+branch: 'main'
+gha_enabled: True
+description: 'jekyll-seo-ai-action is a Github action project, coded in JavaScript Node that will auto-generate descriptions for blog posts, directly in PRs. It works using AI in the backend for the generation of the descriptions. It uses NodeJS, jest.'
+draft: False
+blocked_dirs: [".github/", "dist/"]
+ 
+docs:
+- NodeJS: https://nodejs.org/dist/latest-v18.x/docs/api/
+- GitHub Actions: https://docs.github.com/en/actions
+- Jest: https://jestjs.io/docs/getting-started
+- OpenAI API: https://platform.openai.com/docs/introduction
+ 
+sandbox:
+  install:
+    - npm install
+  check:
+    - npm test
+ 
+rules:
+ - There should not be large sections of commented out code.
+ - Implementations should be simple, straightforward, and clean.
+ - Any change in the installation process should be documented in the README.md markdown file.
