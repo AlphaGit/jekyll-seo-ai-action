@@ -18,7 +18,7 @@ sandbox:
     - npm install
   check:
     - npm test
-    - npm build
+    - npm run build
  
 rules:
  - There should not be large sections of commented out code.
