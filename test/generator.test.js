@@ -13,16 +13,18 @@ const { getModelResponse } = await import("../src/openai-client");
 const fs = await import("fs/promises");
 
 
-    beforeEach(() => {
-        jest.spyOn(console, 'log').mockImplementation();
-        jest.spyOn(console, 'warn').mockImplementation();
-        jest.spyOn(console, 'debug').mockImplementation();
-        jest.spyOn(console, 'error').mockImplementation();
-    });
-
-    it("should return an empty array when given an empty array", async () => {
-        const result = await generateDescriptions([]);
-        expect(result).toEqual([]);
+    describe("generateDescriptions", () => {
+        beforeEach(() => {
+            jest.spyOn(console, 'log').mockImplementation();
+            jest.spyOn(console, 'warn').mockImplementation();
+            jest.spyOn(console, 'debug').mockImplementation();
+            jest.spyOn(console, 'error').mockImplementation();
+        });
+    
+        it("should return an empty array when given an empty array", async () => {
+            const result = await generateDescriptions([]);
+            expect(result).toEqual([]);
+        });
     });
 
     it("should return an empty array when given an array of non-existent files", async () => {
