@@ -11,14 +11,15 @@ const GenerationStatus = Object.freeze({
     GENERATED: 'GENERATED',
     SKIPPED: 'SKIPPED',
     FILE_TOO_BIG: 'FILE_TOO_BIG',
-    UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+    ERROR: 'ERROR'
 });
 
 class DescriptionResult {
-    constructor(page, description, status) {
+    constructor(page, description, status, errorDetails = null) {
         this.page = page;
         this.description = description;
         this.status = status;
+        this.errorDetails = errorDetails;
     }
 }
 
@@ -58,7 +59,7 @@ export const generateDescriptions = async (pages) => {
             return await generateDescription(page)
         } catch (error) {
             console.error(`Error generating description for ${page}: ${error}`);
-            return new DescriptionResult(page, null, GenerationStatus.UNKNOWN_ERROR);
+            return new DescriptionResult(page, null, GenerationStatus.ERROR, error.message);
         }
     });
     const descriptionResults = await Promise.allSettled(resultTasks);
