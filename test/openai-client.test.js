@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 
 jest.unstable_mockModule("openai", () => ({
+
     Configuration: jest.fn(),
     OpenAIApi: jest.fn(() => ({
         createCompletion: jest.fn().mockResolvedValue({
@@ -13,18 +14,7 @@ jest.unstable_mockModule("openai", () => ({
     })),
 }));
 
-jest.unstable_mockModule("openai", () => ({
-    Configuration: jest.fn(),
-    OpenAIApi: jest.fn(() => ({
-        createCompletion: jest.fn().mockResolvedValue({
-            data: {
-                choices: [{
-                    text: "Hello world",
-                }],
-            },
-        }),
-    })),
-}));
+// Commented out the duplicate jest.unstable_mockModule("openai") block
 
 const { getModelResponse } = await import("../src/openai-client");
 
