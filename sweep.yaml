@@ -25,3 +25,4 @@ rules:
  - Implementations should be simple, straightforward, and clean.
  - Any change in the installation process should be documented in the README.md markdown file.
  - Tests need to pass after implementing changes. This might require changes to files under the test/ directory.
+ - Because this works as a Github Actiion, most of the feedback to the user is done through console commands. Seeing them in the execution of the tests is not an error.
