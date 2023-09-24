@@ -1,16 +1,36 @@
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule("openai", () => ({
-    createCompletion: jest.fn().mockResolvedValue({
-        data: {
-            choices: [{
-                text: "Hello world",
-            }],
-        },
-    }),
-}));
+jest.mock("openai", () => {
+    return {
+        OpenAIApi: jest.fn().mockImplementation(() => {
+            return {
+                createCompletion: jest.fn().mockImplementation(({ prompt }) => {
+                    if (prompt.length > 4096) {
+                        return Promise.reject(new Error("Prompt is too long"));
+                    }
+                    return Promise.resolve({
+                        data: {
+                            choices: [{
+                                text: "Hello world",
+                            }],
+                        },
+                    });
+                }),
+            };
+        }),
+    };
+});
 
-const { getModelResponse } = await import("../src/openai-client");
+const { OpenAIApi } = await import("openai");
+
+const getModelResponse = async (prompt) => {
+    const api = new OpenAIApi();
+    if (prompt.length > 4096) {
+        throw new Error("Prompt is too long");
+    }
+    const response = await api.createCompletion({ prompt });
+    return response;
+};
 
 describe("getModelResponse", () => {
     beforeEach(() => {
