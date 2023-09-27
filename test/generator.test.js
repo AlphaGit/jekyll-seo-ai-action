@@ -1,16 +1,10 @@
 import { jest } from '@jest/globals'
 
-jest.unstable_mockModule("fs/promises", () => ({
-    readFile: jest.fn(),
-    writeFile: jest.fn(),
-}));
-jest.unstable_mockModule("../src/openai-client", () => ({
-    getModelResponse: jest.fn().mockResolvedValue(""),
-}));
-
-const { generateDescriptions } = await import("../src/generator");
-const { getModelResponse } = await import("../src/openai-client");
-const fs = await import("fs/promises");
+it("should return an empty array when given an array of non-existent files", async () => {
+    fs.readFile.mockRejectedValue(new Error("File not found"));
+    const result = await generateDescriptions(["non-existent-file.md"]);
+    expect(result).toEqual([]);
+});
 
 describe("generateDescriptions", () => {
     it("should return an empty array when given an empty array", async () => {
@@ -18,11 +12,6 @@ describe("generateDescriptions", () => {
         expect(result).toEqual([]);
     });
 
-    it("should return an empty array when given an array of non-existent files", async () => {
-        fs.readFile.mockRejectedValue(new Error("File not found"));
-        const result = await generateDescriptions(["non-existent-file.md"]);
-        expect(result).toEqual([]);
-    });
 
     it("should return an empty array when given an array of files that don't contain front matter", async () => {
         const result = await generateDescriptions(["test/fixtures/empty.md"]);
