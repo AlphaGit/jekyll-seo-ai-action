@@ -1,5 +1,13 @@
 import { jest } from '@jest/globals'
 
+// Mock console methods to prevent output during tests
+global.console = {
+  log: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+  error: jest.fn()
+};
+
 jest.unstable_mockModule("openai", () => ({
     Configuration: jest.fn(),
     OpenAIApi: jest.fn(() => ({
