@@ -5,6 +5,7 @@
             lines.push(`-- [Jekyll SEO AI Action](https://github.com/AlphaGit/jekyll-seo-ai-action)`);
         } else {
             lines.push(``);
+            lines.push(`# Updated files`);
             lines.push(`| File | Generated description | Status | Error Description |`);
             lines.push(`| :--- | :--- | :--- | :--- |`);
             results.forEach(r => {
