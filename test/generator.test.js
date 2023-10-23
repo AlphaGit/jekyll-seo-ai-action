@@ -30,12 +30,12 @@ describe("generateDescriptions", () => {
     it("should return an empty array when given an array of non-existent files", async () => {
         fs.readFile.mockRejectedValue(new Error("File not found"));
         const result = await generateDescriptions(["non-existent-file.md"]);
-        expect(result).toEqual([new DescriptionResult("non-existent-file.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: File not found")]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/empty.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No front matter found")]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "Existing description", GenerationStatus.SKIPPED, "Description already present")]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/without-front-matter.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No front matter found")]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/without-date.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No date in front matter")]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "This is a test description.", GenerationStatus.SKIPPED, "Description already present")]);
+        expect(result).toEqual([new DescriptionResult("non-existent-file.md", null, GenerationStatus.UNKNOWN_ERROR, "Error generating description for non-existent-file.md: File not found")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/empty.md", null, GenerationStatus.UNKNOWN_ERROR, "No front matter found for test/fixtures/empty.md -- is it really a blog post?")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "Existing description", GenerationStatus.SKIPPED, "Front matter already contains a description for test/fixtures/with-description.md -- skipping")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/without-front-matter.md", null, GenerationStatus.UNKNOWN_ERROR, "No front matter found for test/fixtures/without-front-matter.md -- is it really a blog post?")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/without-date.md", null, GenerationStatus.UNKNOWN_ERROR, "No date in front matter for test/fixtures/without-date.md")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "This is a test description.", GenerationStatus.SKIPPED, "Front matter already contains a description for test/fixtures/with-description.md -- skipping")]);
     });
 
     it("should return an empty array when the files do not have front matters", async () => {
