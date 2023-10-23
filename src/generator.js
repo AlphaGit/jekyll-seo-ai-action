@@ -7,7 +7,7 @@ import { getModelResponse } from './openai-client';
 const FRONT_MATTER_REGEX = /---(.+?)---/su;
 const PAGE_ENCODING = 'utf-8';
 
-const GenerationStatus = Object.freeze({
+export const GenerationStatus = Object.freeze({
     GENERATED: 'Generated',
     SKIPPED: 'Description already present (skipped)',
     FILE_TOO_BIG: 'File too big',
