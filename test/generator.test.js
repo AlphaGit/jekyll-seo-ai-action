@@ -29,35 +29,35 @@ describe("generateDescriptions", () => {
     it("should return an empty array when given an array of non-existent files", async () => {
         fs.readFile.mockRejectedValue(new Error("File not found"));
         const result = await generateDescriptions(["non-existent-file.md"]);
-        expect(result).toEqual([new DescriptionResult("non-existent-file.md", null, GenerationStatus.UNKNOWN_ERROR, "File not found")]);
+        expect(result).toEqual([new DescriptionResult("non-existent-file.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: File not found")]);
     });
 
     it("should return an empty array when given an array of files that don't contain front matter", async () => {
         const result = await generateDescriptions(["test/fixtures/empty.md"]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/empty.md", null, GenerationStatus.UNKNOWN_ERROR, "No front matter found")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/empty.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No front matter found")]);
     });
 
     it("should return an empty array when given an array of files that already contain a description", async () => {
         const result = await generateDescriptions(["test/fixtures/with-description.md"]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "Existing description", GenerationStatus.SKIPPED, "")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "Existing description", GenerationStatus.SKIPPED, "Description already present")]);
     });
 
     it("should return an empty array when the files do not have front matters", async () => {
         fs.readFile.mockResolvedValueOnce(`\n\nBody`);
         const result = await generateDescriptions(["test/fixtures/without-front-matter.md"]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/without-front-matter.md", null, GenerationStatus.UNKNOWN_ERROR, "No front matter found")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/without-front-matter.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No front matter found")]);
     });
 
     it("should return an empty array when the files do not have a date in the front matter", async () => {
         fs.readFile.mockResolvedValueOnce(`---\n---\n\nBody`);
         const result = await generateDescriptions(["test/fixtures/without-date.md"]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/without-date.md", null, GenerationStatus.UNKNOWN_ERROR, "No date in front matter")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/without-date.md", null, GenerationStatus.UNKNOWN_ERROR, "Error: No date in front matter")]);
     });
 
     it("should return an empty array when the files already have descriptions in the front matter", async () => {
         fs.readFile.mockResolvedValueOnce(`---\ndate: 2021-01-01\ndescription: This is a test description.\n---\n\nBody`);
         const result = await generateDescriptions(["test/fixtures/with-description.md"]);
-        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "This is a test description.", GenerationStatus.SKIPPED, "")]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "This is a test description.", GenerationStatus.SKIPPED, "Description already present")]);
     });
 
     it("should return an array of results when given an array of files that don't contain a description", async () => {
