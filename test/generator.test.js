@@ -23,23 +23,23 @@ const fs = await import("fs/promises");
 describe("generateDescriptions", () => {
     it("should return an empty array when given an empty array", async () => {
         const result = await generateDescriptions([]);
-        expect(result).toEqual([]);
+        expect(result).toEqual([]); // No changes needed as the input is an empty array
     });
 
     it("should return an empty array when given an array of non-existent files", async () => {
         fs.readFile.mockRejectedValue(new Error("File not found"));
         const result = await generateDescriptions(["non-existent-file.md"]);
-        expect(result).toEqual([]);
+        expect(result).toEqual([new DescriptionResult("non-existent-file.md", null, GenerationStatus.UNKNOWN_ERROR, "File not found")]);
     });
 
     it("should return an empty array when given an array of files that don't contain front matter", async () => {
         const result = await generateDescriptions(["test/fixtures/empty.md"]);
-        expect(result).toEqual([]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/empty.md", null, GenerationStatus.UNKNOWN_ERROR, "No front matter found")]);
     });
 
     it("should return an empty array when given an array of files that already contain a description", async () => {
         const result = await generateDescriptions(["test/fixtures/with-description.md"]);
-        expect(result).toEqual([]);
+        expect(result).toEqual([new DescriptionResult("test/fixtures/with-description.md", "Existing description", GenerationStatus.SKIPPED)]);
     });
 
     it("should return an empty array when the files do not have front matters", async () => {
@@ -65,10 +65,7 @@ describe("generateDescriptions", () => {
         getModelResponse.mockResolvedValueOnce("This is a generated test description.");
         const result = await generateDescriptions(["test/fixtures/without-description.md"]);
         expect(result).toEqual([
-            {
-                page: "test/fixtures/without-description.md",
-                description: "This is a generated test description.",
-            },
+            new DescriptionResult("test/fixtures/without-description.md", "This is a generated test description.", GenerationStatus.GENERATED),
         ]);
         expect(fs.writeFile).toHaveBeenCalledWith(
             "test/fixtures/without-description.md",
