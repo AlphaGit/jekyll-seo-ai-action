@@ -14,7 +14,7 @@ export const GenerationStatus = Object.freeze({
     UNKNOWN_ERROR: 'Unknown error'
 });
 
-class DescriptionResult {
+export class DescriptionResult {
     constructor(page, description, status, errorDescription = '') {
         this.page = page;
         this.description = description;
