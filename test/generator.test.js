@@ -1,4 +1,7 @@
 import { jest } from '@jest/globals'
+import { generateDescriptions, DescriptionResult, GenerationStatus } from '../src/generator';
+import { getModelResponse } from '../src/openai-client';
+import { readFile, writeFile } from 'fs/promises';
 
 // Mock console methods to prevent output during tests
 global.console = {
@@ -9,17 +12,13 @@ global.console = {
   info: jest.fn()
 };
 
-jest.unstable_mockModule("fs/promises", () => ({
+jest.mock("fs/promises", () => ({
     readFile: jest.fn(),
     writeFile: jest.fn(),
 }));
-jest.unstable_mockModule("../src/openai-client", () => ({
+jest.mock("../src/openai-client", () => ({
     getModelResponse: jest.fn().mockResolvedValue(""),
 }));
-
-const { generateDescriptions, DescriptionResult, GenerationStatus } = await import("../src/generator");
-const { getModelResponse } = await import("../src/openai-client");
-const fs = await import("fs/promises");
 
 describe("generateDescriptions", () => {
     afterEach(() => {
