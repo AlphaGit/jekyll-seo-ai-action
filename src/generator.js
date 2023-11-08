@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'fs/promises';
+import * as fs from 'fs/promises';
+const { readFile, writeFile } = fs;
 import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
 
 import { OPENAI_PROMPT } from './settings';
