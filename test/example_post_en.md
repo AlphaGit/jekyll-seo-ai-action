@@ -3,16 +3,19 @@ excerpt_separator: <!--more-->
 title: Obsidian and second brains
 subtitle: Taking notes of everything, but quickly
 categories:
-    - Thoughts
+  - Thoughts
 tags:
-    - Second brain
-    - Tools
-    - Note taking
+  - Second brain
+  - Tools
+  - Note taking
 header:
-    image: assets/papers.png
-    image_description: Written knowledge, but searchable
-
+  image: assets/papers.png
+  image_description: Written knowledge, but searchable
+description: >-
+  Storing knowledge, second brain approach, Obsidian, EverNote, markdown,
+  interlinking notes, GitHub, Quartz, Tech Garden, Alpha's Manifesto.
 ---
+
 
 I have stopped reviewing tools as part of my blog for a long time, but I did want to point out the benefits of the second-brain approach of some applications. I have personally found my sweet spot with [Obsidian](https://obsidian.md/), so I'd like to talk about that.
 
